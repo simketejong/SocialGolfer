@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golf Tournament Schedule</title>
+    <style>
+        .flight {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .golfer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100px;
+            height: 100px;
+            position: relative;
+            font-weight: bold;
+            color: white;
+            border-radius: 5px;
+            margin-right: -1px;
+            margin-bottom: -1px;
+        }
+        .checkbox {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 20px;
+            height: 20px;
+        }
+        .golfer:not(.white) {
+           cursor: pointer; /* Indicates the square is draggable */
+        }
+        .golfer.over {
+            border: 2px dashed #000; /* Visual cue for drag over */
+        }
+        .hamburger-menu {
+            position: absolute;
+            top: 0;
+            left: 0; /* Adjusted from right to left */
+            cursor: pointer;
+            font-size: 20px;
+            padding: 5px;
+            z-index: 2; /* Ensure it appears above other content */
+        }
+        #popup {
+        /* Existing styles */
+        }
+
+        /* Styles for icons/circles if not using pictograms */
+        .buggy-icon, .pro-icon {
+            position: absolute;
+            bottom: 5px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .buggy-icon {
+            background-color: red;
+            left: 5px;
+        }
+
+        .pro-icon {
+            background-color: blue;
+            right: 5px;
+        }                
+
+        .cri1-icon, .cri2-icon, .cri3-icon, .cri4-icon {
+            position: absolute;
+            bottom: 5px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .cri1-icon {
+            background-color: rgb(217, 255, 0);
+            left: 22px;
+        }
+
+        .cri2-icon {
+            background-color: rgb(2, 135, 0);
+            left: 37px;
+        }
+
+        .cri3-icon {
+            background-color: rgb(220, 1, 244);
+            right: 37px;
+        }
+        .cri4-icon {
+            background-color: rgb(200, 103, 44);
+            right: 22px;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Golf Tournament Schedule</h1>
+    <div id="schedule"></div>
+    <div id="popup" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background-color:white; padding:20px; border-radius:10px; box-shadow:0 0 15px rgba(0,0,0,.2); z-index:1000;">
+        <h3>Adjust Golfer</h3>
+        <label>Identifier: <input type="text" id="identifier-input"></label><br>
+        <label>Color: <input type="color" id="color-picker"></label><br>
+        <label><input type="checkbox" id="buggy-checkbox"> Buggy</label><br>
+        <label><input type="checkbox" id="pro-checkbox"> Pro</label><br>
+        <label><input type="checkbox" id="criteria_1-checkbox"> Citeria_1</label><br>
+        <label><input type="checkbox" id="criteria_2-checkbox"> Citeria_2</label><br>
+        <label><input type="checkbox" id="criteria_3-checkbox"> Citeria_3</label><br>
+        <label><input type="checkbox" id="criteria_4-checkbox"> Citeria_4</label><br>
+        <button id="ok-button">OK</button>
+    </div>
+    <div id="golferInfoPopup" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background-color:rgb(255, 255, 255); padding:20px; border-radius:10px; box-shadow:0 0 15px rgba(0,0,0,.2); z-index:1000;">
+        <h3 id="golferInfoName">Golfer Name</h3>
+        <div id="golferInfoMatrix"></div>
+        <button onclick="document.getElementById('golferInfoPopup').style.display='none';">Close</button>
+    </div>
+    
+    <div id="scheduleDisplay"></div>
+
+
+    <script src="schedule.js"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golf Tournament Schedule</title>
+    <style>
+        .flight {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .golfer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100px;
+            height: 100px;
+            position: relative;
+            font-weight: bold;
+            color: white;
+            border-radius: 5px;
+            margin-right: -1px;
+            margin-bottom: -1px;
+        }
+        .checkbox {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 20px;
+            height: 20px;
+        }
+        .golfer:not(.white) {
+           cursor: pointer; /* Indicates the square is draggable */
+        }
+        .golfer.over {
+            border: 2px dashed #000; /* Visual cue for drag over */
+        }
+    </style>
+</head>
+<body>
+    <h1>Golf Tournament Schedule</h1>
+    <div id="schedule"></div>
+
+    <script src="schedule.js"></script>
+</body>
+</html>
