@@ -658,7 +658,7 @@ function finalizeFlights() {
     // Rebuild the DOM based on the updated flights structure
     console.log(updatedFlightsPerDay)
     rebuildDOMWithFinalizedFlights(updatedFlightsPerDay);
-
+    return updatedFlightsPerDay
     alert('Flights finalized successfully.');
 }
 function rebuildDOMWithFinalizedFlights(updatedFlightsPerDay) {

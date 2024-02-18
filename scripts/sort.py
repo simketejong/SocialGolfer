@@ -193,7 +193,6 @@ if Given_Array is None:
 Array = parse_array_argument(args.players_per_flight)   
 if Array is not None:
     players_per_flight = Array
-
 players = []
 AantalPogingen=10000
 LaagsteDubbels=1000
