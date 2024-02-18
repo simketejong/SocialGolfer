@@ -124,6 +124,23 @@
             }
         });
         });
+        $('#finalFlightsSummary').click(function(){
+        $.ajax({
+            type: "POST",
+            url: "http://localhost/test_array",
+            data: JSON.stringify(searchSolution()),
+            contentType: "application/json", // Ensure you set the content type when sending JSON
+            dataType: "text", // Expecting text response from server
+            timeout: 60000, // timeout
+            success: function(data, status) {
+                pythonReturn(data);
+            },
+            error: function(xhr, status, error) {
+                console.error("Error: " + status + " " + error);
+            }
+        });
+        });
+
     });            
     </script>
 </head>

@@ -611,7 +611,6 @@ function displayFlightSuggestion(flightsPerDay) {
     finalizeButton.onclick = finalizeFlights;
     suggestionDiv.appendChild(finalizeButton);
 }
-// Function to add a flight input
 function addFlight(container, dayIndex) {
     const flightDiv = document.createElement('div');
 
@@ -628,7 +627,6 @@ function addFlight(container, dayIndex) {
 
     container.appendChild(flightDiv);
 }
-// Function to remove a flight input
 function removeFlight(flightDiv, dayIndex) {
     flightDiv.remove();
 }
@@ -663,7 +661,6 @@ function finalizeFlights() {
 
     alert('Flights finalized successfully.');
 }
-
 function rebuildDOMWithFinalizedFlights(updatedFlightsPerDay) {
     const flightsSummaryDiv = document.getElementById('finalFlightsSummary');
     flightsSummaryDiv.innerHTML = ''; // Clear existing summary

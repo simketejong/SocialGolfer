@@ -1,8 +1,6 @@
-
 import random
 import argparse
 import ast
-
 
 players_per_flight = [
     # Day 1
@@ -187,10 +185,15 @@ def parse_array_argument(array_str):
 
 parser = argparse.ArgumentParser(description="Process the given array.")
 parser.add_argument("--GivenArray", type=str, help="Array in string format", default="[]")   
+parser.add_argument("--players_per_flight", type=str, help="Array in string format", default="[]")
 args = parser.parse_args()    
 Given_Array = parse_array_argument(args.GivenArray)   
 if Given_Array is None:
     Given_Array = []
+Array = parse_array_argument(args.players_per_flight)   
+if Array is not None:
+    players_per_flight = Array
+
 players = []
 AantalPogingen=10000
 LaagsteDubbels=1000
