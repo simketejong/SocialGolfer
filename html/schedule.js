@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
     displaySchedule(schedule);
     assignDragAndDrop();
 });
-
 function generateSchedule(golfers, days) {
     for (let day = 0; day < days; day++) {
         const dailyFlights = [];
@@ -23,6 +22,9 @@ function generateSchedule(golfers, days) {
         }
         schedule.push(dailyFlights);
     }
+// TODO: Moet input screen maken, aantal dagen aantal spelelers, aantal flights per dag
+// TODO: Bij het maken koppel moet ergens naam en aan letter koppelen met attributen
+// TODO: Input gaat na sort.py die een array probeer te maken de resultaat gaat naar schedule.js
 //    schedule = [[["L","H","S","J"],["D","R","F","N"],["G","T","M",],["O","Q","A"],["I","P","B"],["E","K","C"]],
 //                [["D","B","A","M"],["I","C","P","L"],["J","S","T","Q"],["K","F","R","E"],["N","O","H","G"]],
 //                [["T","K","L","S"],["Q","D","R","F"],["N","H","G","M"],["A","C","J","B"],["O","P","E","I"]],
@@ -33,7 +35,6 @@ function generateSchedule(golfers, days) {
     
     return schedule;
 }
-
 function generateGolferColors() {
     const golfers = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
     const colors = {};
@@ -46,7 +47,6 @@ function generateGolferColors() {
     });
     return colors;
 }
-
 function displaySchedule(schedule) {
     const scheduleDiv = document.getElementById('schedule');
     const golferColors = generateGolferColors();
@@ -82,7 +82,6 @@ function displaySchedule(schedule) {
         scheduleDiv.appendChild(dayDiv);
     });
 }
-
 function assignDragAndDrop() {
     let draggedItem = null;
 
@@ -211,7 +210,6 @@ function openPopup(golferDiv) {
         popup.style.display = 'none';
     };
 }
-
 function updateIcons(golferDiv, isBuggy, isPro, isCri1, isCri2, isCri3, isCri4) {
     // Remove existing icons/circles
     golferDiv.querySelectorAll('.buggy-icon, .pro-icon, .cri1-icon, .cri2-icon, .cri3-icon, .cri4-icon').forEach(icon => icon.remove());
@@ -252,13 +250,11 @@ function updateIcons(golferDiv, isBuggy, isPro, isCri1, isCri2, isCri3, isCri4) 
     }
 
 }
-
 function rgbToHex(rgb) {
     if (!rgb) return '#000000'; // Default color if none is set
     let [r, g, b] = rgb.match(/\d+/g).map(Number);
     return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
 }
-
 function displayGolferInfoPopup(golferName) {
     const popup = document.getElementById('golferInfoPopup');
     const nameDisplay = document.getElementById('golferInfoName');
@@ -319,7 +315,6 @@ function displayGolferInfoPopup(golferName) {
     // Show popup
     popup.style.display = 'block';
 }
-
 function generatePlayMatrix(schedule) {
     const playMatrix = {};
     // Initialize matrix with golfer keys
@@ -353,7 +348,6 @@ function generatePlayMatrix(schedule) {
 
     return playMatrix;
 }
-
 function displayPlayMatrix(playMatrix) {
     const matrixDiv = document.createElement('div');
     const table = document.createElement('table');
@@ -375,7 +369,6 @@ function displayPlayMatrix(playMatrix) {
     matrixDiv.appendChild(table);
     document.body.appendChild(matrixDiv); // Or append to another element as needed
 }
-
 function displayGlobalSchedule() {
     console.log(JSON.stringify(schedule));
     const scheduleContainer = document.getElementById('scheduleDisplay');
@@ -405,7 +398,6 @@ function displayGlobalSchedule() {
         scheduleContainer.appendChild(dayDiv); // Add this day to the schedule container
     });
 }
-
 function rebuildScheduleFromDOM() {
         const scheduleTest = [];
         const days = document.querySelectorAll('#schedule > div');
@@ -433,7 +425,6 @@ function rebuildScheduleFromDOM() {
         console.log(JSON.stringify(scheduleTest));   
         return scheduleTest;
     }
-
 function searchSolution() {
         const scheduleTest = [];
         const days = document.querySelectorAll('#schedule > div');
@@ -446,15 +437,22 @@ function searchSolution() {
                 const golfersInFlight = [];
                 const golfers = flightDiv.querySelectorAll('.golfer');
     
-                golfers.forEach((golferDiv) => {
+                golfers.forEach((golferDiv) => { // TODO: Speler staat op verkeerde positie in array
+                    checkPush=false
                     const golferId = golferDiv.getAttribute('golfer'); // assuming golfer attribute holds the identifier
-                    const checkboxe = flightDiv.querySelector('.golfer .checkbox');
-//                    golfersInFlight.push(checkboxes.checked);
-                    if (checkboxe.checked) {
-                        golfersInFlight.push(golferId);
-                    }
-                    else{
-                        golfersInFlight.push("?");
+                    const checkboxe = flightDiv.querySelectorAll('.golfer .checkbox');
+                    checkboxe.forEach(checkbox => {
+                        if (checkbox.checked && !checkPush) {
+                            // Find the closest parent golfer div to access golfer attributes
+                            const golferElement = checkbox.closest('.golfer');
+                            if (!golfersInFlight.includes(golferElement.getAttribute('golfer'))){
+                                    golfersInFlight.push(golferElement.getAttribute('golfer'));                            
+                                    checkPush=true
+                                }
+                        }
+                    })
+                    if (!checkPush){
+                        golfersInFlight.push("?");    
                     }
                 });
                 flightsForDay.push(golfersInFlight);
@@ -462,15 +460,15 @@ function searchSolution() {
     
             scheduleTest.push(flightsForDay);
         });
-        console.log(JSON.stringify(schedule));       
-        console.log(JSON.stringify(scheduleTest));   
+//        console.log(JSON.stringify(schedule));       
+//        console.log(JSON.stringify(scheduleTest));   
         return scheduleTest;
     }
-
 function pythonReturn(data){
-    alert("Python return");
-    console.log(JSON.stringify(schedule));
-    console.log(data.trim());
-    schedule=data.trim()
+    jsonString=data.trim();
+    let validJsonString = jsonString.replace(/'/g, '"');    
+    schedule=JSON.parse(validJsonString);
+    var scheduleDiv = document.getElementById('schedule');
+    scheduleDiv.innerHTML = '';
     displaySchedule(schedule)
 }

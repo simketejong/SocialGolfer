@@ -210,6 +210,7 @@ while (AantalPogingen > 0):
 
 if AantalPogingen == 0 :
     print(organize_flights(players))
+# TODO: Maak een iratieve process die optimaal vind met aantal dubbels en deze twee moeten terug , dus aantal dubbles en hoeveel keer gezocht
 #    print(f"Timeout MinDubbels = {LaagsteDubbels}")
 #print(f"Dubbels {LaagsteDubbels}")
 
