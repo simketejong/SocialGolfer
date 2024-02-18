@@ -128,6 +128,24 @@
     </script>
 </head>
 <body>
+    <div id="golfer-setup">
+        <label for="numGolfers">How many golfers?</label>
+        <input type="number" id="numGolfers" min="1">
+        
+        <label for="numDays">How many days are they playing?</label>
+        <input type="number" id="numDays" min="1">
+        
+        <button onclick="suggestFlights()">Suggest Flights</button>
+        
+        <div id="flightSuggestion"></div>
+    </div>
+    
+    <div id="golfer-details" style="display:none;">
+        <!-- Golfer details will be dynamically added here -->
+    </div>
+    
+    <button id="finalFlightsSummary">Generate Flight Size</button>
+
     <h1 id="SaveData">Golf Tournament Schedule</h1>
     <div id="schedule"></div>
     <div id="popup" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background-color:white; padding:20px; border-radius:10px; box-shadow:0 0 15px rgba(0,0,0,.2); z-index:1000;">

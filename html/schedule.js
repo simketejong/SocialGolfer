@@ -1,5 +1,6 @@
 let golverDiv = []
 let schedule = []
+let flightsPerDay = []
 
 document.addEventListener('DOMContentLoaded', () => {
     const golfers = 'ABCDEFGHIJKLMNOPQRST'.split('');
@@ -450,7 +451,7 @@ function rebuildScheduleFromDOM() {
         console.log(JSON.stringify(schedule));
         console.log(JSON.stringify(scheduleTest));   
         return scheduleTest;
-    }
+}
 function searchSolution() {
         const scheduleTest = [];
         const days = document.querySelectorAll('#schedule > div');
@@ -489,7 +490,7 @@ function searchSolution() {
 //        console.log(JSON.stringify(schedule));       
 //        console.log(JSON.stringify(scheduleTest));   
         return scheduleTest;
-    }
+}
 function pythonReturn(data){
     jsonString=data.trim();
     let validJsonString = jsonString.replace(/'/g, '"');    
@@ -523,5 +524,160 @@ function recalculateHcpForFlights() {
             newHcpSummaryDiv.innerHTML = `Total HCP: ${hcpSum}, Highest HCP: ${hcpMax}, Lowest HCP: ${hcpMin}`;
             flightDiv.appendChild(newHcpSummaryDiv);
         }
+    });
+}
+function suggestFlights() {
+    const numGolfers = parseInt(document.getElementById('numGolfers').value, 10);
+    const numDays = parseInt(document.getElementById('numDays').value, 10);
+    let flightsPerDay = new Array(numDays).fill(0).map(() => []);
+    for (let day = 0; day < numDays; day++) {
+        golfersRemaining = numGolfers;
+        while (golfersRemaining > 0) {
+            if (golfersRemaining == 10) {
+                flightsPerDay[day].push(4);
+                flightsPerDay[day].push(3);
+                flightsPerDay[day].push(3);    
+                golfersRemaining=0;
+            }
+            if (golfersRemaining == 9) {
+                flightsPerDay[day].push(3);
+                flightsPerDay[day].push(3);
+                flightsPerDay[day].push(3);    
+                golfersRemaining=0;
+            }
+            if (golfersRemaining == 8) {
+                flightsPerDay[day].push(3);
+                flightsPerDay[day].push(3);
+                flightsPerDay[day].push(3);    
+                golfersRemaining=0;
+            }
+            if (golfersRemaining == 7) {
+                flightsPerDay[day].push(4);
+                flightsPerDay[day].push(3);
+                golfersRemaining=0;        
+            }
+            if (golfersRemaining == 6) {
+                flightsPerDay[day].push(3);
+                flightsPerDay[day].push(3);
+                flightsPerDay[day].push(3);    
+                golfersRemaining=0;
+            }
+            if (golfersRemaining > 10){
+                flightsPerDay[day].push(4);
+                golfersRemaining=golfersRemaining-4;    
+            }
+        }
+    }
+    displayFlightSuggestion(flightsPerDay);
+}
+function displayFlightSuggestion(flightsPerDay) {
+    const suggestionDiv = document.getElementById('flightSuggestion');
+    suggestionDiv.innerHTML = ''; // Clear previous content
+
+    flightsPerDay.forEach((flights, dayIndex) => {
+        const dayDiv = document.createElement('div');
+        dayDiv.innerHTML = `<strong>Day ${dayIndex + 1}:</strong> `;
+
+        const flightsContainer = document.createElement('div');
+        flights.forEach((flight, flightIndex) => {
+            const flightDiv = document.createElement('div');
+
+            const flightInput = document.createElement('input');
+            flightInput.type = 'number';
+            flightInput.value = flight;
+            flightInput.className = `day${dayIndex}-flight`;
+            flightDiv.appendChild(flightInput);
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = '-';
+            deleteButton.onclick = function() { removeFlight(flightDiv, dayIndex); };
+            flightDiv.appendChild(deleteButton);
+
+            flightsContainer.appendChild(flightDiv);
+        });
+
+        dayDiv.appendChild(flightsContainer);
+
+        const addButton = document.createElement('button');
+        addButton.textContent = '+ Add Flight';
+        addButton.onclick = function() { addFlight(flightsContainer, dayIndex); };
+        dayDiv.appendChild(addButton);
+
+        suggestionDiv.appendChild(dayDiv);
+    });
+
+    const finalizeButton = document.createElement('button');
+    finalizeButton.textContent = 'Finalize Flights';
+    finalizeButton.onclick = finalizeFlights;
+    suggestionDiv.appendChild(finalizeButton);
+}
+// Function to add a flight input
+function addFlight(container, dayIndex) {
+    const flightDiv = document.createElement('div');
+
+    const flightInput = document.createElement('input');
+    flightInput.type = 'number';
+    flightInput.value = 4; // Default value for a new flight
+    flightInput.className = `day${dayIndex}-flight`;
+    flightDiv.appendChild(flightInput);
+
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = '-';
+    deleteButton.onclick = function() { removeFlight(flightDiv, dayIndex); };
+    flightDiv.appendChild(deleteButton);
+
+    container.appendChild(flightDiv);
+}
+// Function to remove a flight input
+function removeFlight(flightDiv, dayIndex) {
+    flightDiv.remove();
+}
+function finalizeFlights() {
+    const numGolfers = parseInt(document.getElementById('numGolfers').value, 10);
+    let totalGolfersCounted = 0;
+    let updatedFlightsPerDay = [];
+
+    // Iterate through each day to collect flight information
+    const numDays = parseInt(document.getElementById('numDays').value, 10);
+    for (let day = 0; day < numDays; day++) {
+        const flights = document.querySelectorAll(`.day${day}-flight`);
+        let dayFlights = [];
+
+        flights.forEach(flightInput => {
+            const golfersInFlight = parseInt(flightInput.value, 10);
+            totalGolfersCounted += golfersInFlight;
+            dayFlights.push(golfersInFlight); // Add this flight's golfer count to the day's flights
+        });
+
+        updatedFlightsPerDay.push(dayFlights); // Add the day's flights to the updated structure
+    }
+    // Validation to ensure the total number of players matches the input
+    if (totalGolfersCounted !== numGolfers*numDays) {
+        alert("Amount not correct");
+        return;
+    }
+
+    // Rebuild the DOM based on the updated flights structure
+    console.log(updatedFlightsPerDay)
+    rebuildDOMWithFinalizedFlights(updatedFlightsPerDay);
+
+    alert('Flights finalized successfully.');
+}
+
+function rebuildDOMWithFinalizedFlights(updatedFlightsPerDay) {
+    const flightsSummaryDiv = document.getElementById('finalFlightsSummary');
+    flightsSummaryDiv.innerHTML = ''; // Clear existing summary
+
+    updatedFlightsPerDay.forEach((flights, dayIndex) => {
+        const daySummaryDiv = document.createElement('div');
+        daySummaryDiv.innerHTML = `<strong>Day ${dayIndex + 1}:</strong> ${flights.length} flights`;
+
+        flights.forEach((golfers, flightIndex) => {
+            const flightInfo = document.createElement('p');
+            flightInfo.innerHTML = `Flight ${flightIndex + 1}: ${golfers} golfers`;
+            daySummaryDiv.appendChild(flightInfo);
+        });
+
+        flightsSummaryDiv.appendChild(daySummaryDiv);
     });
 }
