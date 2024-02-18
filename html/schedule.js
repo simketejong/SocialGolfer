@@ -49,34 +49,58 @@ function generateGolferColors() {
 }
 function displaySchedule(schedule) {
     const scheduleDiv = document.getElementById('schedule');
-    const golferColors = generateGolferColors();
+    const golferColors = generateGolferColors(); // Assuming this function generates colors for each golfer
+
     schedule.forEach((day, index) => {
         const dayDiv = document.createElement('div');
-        dayDiv.innerHTML = `<h2 class-"day">Day ${index + 1}</h2>`;
+        dayDiv.innerHTML = `<h2 class="day">Day ${index + 1}</h2>`; // Fix class assignment syntax
         day.forEach((flight, fIndex) => {
             const flightDiv = document.createElement('div');
             flightDiv.className = 'flight';
             flightDiv.innerHTML = `<h3>Flight ${fIndex + 1}</h3>`;
+            let hcpSum = 0;
+            let hcpMax = -Infinity;
+            let hcpMin = Infinity;
+
             flight.forEach(golfer => {
-                golferDiv = document.createElement('div');
+                const golferDiv = document.createElement('div');
                 golferDiv.className = 'golfer';
                 golferDiv.setAttribute('golfer', golfer);
-                golferDiv.setAttribute('hcp', 0);
-                golferDiv.style.backgroundColor = golferColors[golfer];
-                golferDiv.innerHTML = `<span class="span"  onclick="displayGolferInfoPopup('${golfer}')">
-                    ${golfer}
-                    </span>
-                    <input type="checkbox" class="checkbox" />
-                `;               
-                golferDiv.setAttribute('draggable', true);
-                flightDiv.appendChild(golferDiv);
+                // Assuming hcp is set here as an example. You should adjust this according to your actual data.
+                golferDiv.setAttribute('hcp', Math.floor(Math.random() * 36)); // Example hcp setting
 
+                golferDiv.style.backgroundColor = golferColors[golfer];
+                
+                // Insert the golfer span, checkbox, and hcp display in the correct order
+                golferDiv.innerHTML = `
+                    <span class="span" onclick="displayGolferInfoPopup('${golfer}')">${golfer}</span>
+                    <div class="hcp-display">${golferDiv.getAttribute('hcp')}</div> 
+                    <input type="checkbox" class="checkbox">
+                `; // HCP is displayed here as requested
+
+                golferDiv.setAttribute('draggable', true);
+                
                 const menu = document.createElement('div');
                 menu.className = 'hamburger-menu';
-                menu.setAttribute("onclick","openPopup(this.closest('.golfer'))")
+                menu.setAttribute("onclick", "openPopup(this.closest('.golfer'))");
                 menu.innerHTML = '&#9776;';
-                golferDiv.appendChild(menu);
-                });
+                golferDiv.insertBefore(menu, golferDiv.firstChild); // Insert the menu at the beginning
+
+                flightDiv.appendChild(golferDiv);
+
+                // Update hcp calculations
+                const hcp = parseInt(golferDiv.getAttribute('hcp'), 10);
+                hcpSum += hcp;
+                hcpMax = Math.max(hcpMax, hcp);
+                hcpMin = Math.min(hcpMin, hcp);
+            });
+
+            // Append HCP summary to flightDiv
+            const hcpSummaryDiv = document.createElement('div');
+            hcpSummaryDiv.className = `hcp-summary`
+            hcpSummaryDiv.innerHTML = `Total HCP: ${hcpSum}' Highest HCP: ${hcpMax}, Lowest HCP: ${hcpMin}`;
+            flightDiv.appendChild(hcpSummaryDiv);
+
             dayDiv.appendChild(flightDiv);
         });
         scheduleDiv.appendChild(dayDiv);
@@ -144,6 +168,7 @@ function assignDragAndDrop() {
             this.setAttribute("hcp",draggedItem.getAttribute('hcp'))
             draggedItem.setAttribute("hcp",targetHcp);
 
+            recalculateHcpForFlights();
             // If you're using IDs or any other attributes that should be unique, swap them here as well
         }
     }
@@ -153,6 +178,7 @@ function assignDragAndDrop() {
         document.querySelectorAll('.golfer').forEach(golferDiv => {
             golferDiv.classList.remove('over');
         });
+        recalculateHcpForFlights();
     }
 }
 function openPopup(golferDiv) {
@@ -471,4 +497,31 @@ function pythonReturn(data){
     var scheduleDiv = document.getElementById('schedule');
     scheduleDiv.innerHTML = '';
     displaySchedule(schedule)
+}
+function recalculateHcpForFlights() {
+    document.querySelectorAll('.flight').forEach(flightDiv => {
+        let hcpSum = 0;
+        let hcpMax = -Infinity;
+        let hcpMin = Infinity;
+
+        const golfers = flightDiv.querySelectorAll('.golfer');
+        golfers.forEach(golferDiv => {
+            const hcp = parseInt(golferDiv.getAttribute('hcp'), 10);
+            hcpSum += hcp;
+            hcpMax = Math.max(hcpMax, hcp);
+            hcpMin = Math.min(hcpMin, hcp);
+        });
+
+        // Assuming there's only one summary div per flight, update it
+        const hcpSummaryDiv = flightDiv.querySelector('.hcp-summary');
+        if(hcpSummaryDiv) {
+            hcpSummaryDiv.innerHTML = `Total HCP: ${hcpSum}, Highest HCP: ${hcpMax}, Lowest HCP: ${hcpMin}`;
+        } else {
+            // If there's no summary div (first drag-and-drop operation), create and append it
+            const newHcpSummaryDiv = document.createElement('div');
+            newHcpSummaryDiv.className = 'hcp-summary';
+            newHcpSummaryDiv.innerHTML = `Total HCP: ${hcpSum}, Highest HCP: ${hcpMax}, Lowest HCP: ${hcpMin}`;
+            flightDiv.appendChild(newHcpSummaryDiv);
+        }
+    });
 }
