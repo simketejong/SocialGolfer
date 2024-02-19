@@ -1,6 +1,7 @@
 let golverDiv = []
 let schedule = []
 let flightsPerDay = []
+var Golfers = {};
 
 document.addEventListener('DOMContentLoaded', () => {
 //    const golfers = 'ABCDEFGHIJKLMNOPQRST'.split('');
@@ -10,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //    displaySchedule(schedule);
 //    assignDragAndDrop();
 });
-function generateSchedule(golfers, days) {
+/*function generateSchedule(golfers, days) {
     for (let day = 0; day < days; day++) {
         const dailyFlights = [];
         let availableGolfers = [...golfers];
@@ -24,7 +25,6 @@ function generateSchedule(golfers, days) {
         schedule.push(dailyFlights);
     }
 // TODO: Bij het maken koppel moet ergens naam en aan letter koppelen met attributen
-// TODO: Input gaat na sort.py die een array probeer te maken de resultaat gaat naar schedule.js
 //    schedule = [[["L","H","S","J"],["D","R","F","N"],["G","T","M",],["O","Q","A"],["I","P","B"],["E","K","C"]],
 //                [["D","B","A","M"],["I","C","P","L"],["J","S","T","Q"],["K","F","R","E"],["N","O","H","G"]],
 //                [["T","K","L","S"],["Q","D","R","F"],["N","H","G","M"],["A","C","J","B"],["O","P","E","I"]],
@@ -35,6 +35,23 @@ function generateSchedule(golfers, days) {
     
     return schedule;
 }
+*/
+function populateGolfers() {
+    const numGolfers = document.getElementById('numGolfers').value; // Assuming this input exists and captures the total number of golfers.
+    for (let i = 0; i < numGolfers; i++) {
+        const name = document.getElementById(`golferName${i}`).value; // Get golfer's name
+        const hcp = document.getElementById(`golferHcp${i}`).value; // Get golfer's handicap
+        const color = generateGolferColor(name); // Placeholder for a function that determines golfer's color
+        // Generate or assign other attributes as needed
+
+ 
+        Golfers[name] = {
+            hcp: hcp,
+            color: color,
+        };
+    }
+}
+
 function generateGolferColors() {
     const golfers = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
     const colors = {};
@@ -67,9 +84,11 @@ function displaySchedule(schedule) {
                 golferDiv.className = 'golfer';
                 golferDiv.setAttribute('golfer', golfer);
                 // Assuming hcp is set here as an example. You should adjust this according to your actual data.
-                golferDiv.setAttribute('hcp', Math.floor(Math.random() * 36)); // Example hcp setting
-
-                golferDiv.style.backgroundColor = golferColors[golfer];
+                //golferDiv.setAttribute('hcp', Math.floor(Math.random() * 36)); // Example hcp setting
+                if (Golfers[golfer]) {
+                    golferDiv.setAttribute('hcp', Golfers[golfer].hcp);
+                    golferDiv.style.backgroundColor = Golfers[golfer].color;
+                }
                 
                 // Insert the golfer span, checkbox, and hcp display in the correct order
                 golferDiv.innerHTML = `
@@ -104,7 +123,8 @@ function displaySchedule(schedule) {
             dayDiv.appendChild(flightDiv);
         });
         scheduleDiv.appendChild(dayDiv);
-    });
+    });        
+    console.log(JSON.stringify(Golfers))
 }
 function assignDragAndDrop() {
     //FIXIT: Now drag and drop doesnt work
@@ -195,7 +215,6 @@ function openPopup(golferDiv) {
     const cri4Checkbox = document.getElementById('criteria_4-checkbox');        
     const okButton = document.getElementById('ok-button');
 
-   
     golfers=golferDiv.getAttribute("golfer");
     HCP.value=golferDiv.getAttribute("hcp");
     
@@ -221,15 +240,19 @@ function openPopup(golferDiv) {
             if (golferDiv.getAttribute("golfer") === golfers) {
                 // Update the golfer's display name if you have a specific spanss or div for it
                 const nameSpan = golferDiv.querySelector('.span');
-                golferDiv.style.backgroundColor = colorPicker.value;;
-                nameSpan.textContent = naam.value
+                golferDiv.style.backgroundColor = colorPicker.value;
+                Golfers[golfers].color = colorPicker.value;
+                nameSpan.textContent = naam.value;
+                Golfers[golfers].realName = naam.value;
                 golferDiv.classList.toggle('buggy', buggyCheckbox.checked);
+                Golfers[golfers].buggy = buggyCheckbox.checked;
                 golferDiv.classList.toggle('pro', proCheckbox.checked);
                 golferDiv.classList.toggle('cri1', cri1Checkbox.checked);
                 golferDiv.classList.toggle('cri2', cri2Checkbox.checked);
                 golferDiv.classList.toggle('cri3', cri3Checkbox.checked);
                 golferDiv.classList.toggle('cri4', cri4Checkbox.checked);  
                 golferDiv.setAttribute("hcp",HCP.value);  
+                Golfers[golfers].hcp = HCP.value;
                 updateIcons(golferDiv, buggyCheckbox.checked, proCheckbox.checked, cri1Checkbox.checked , cri2Checkbox.checked, cri3Checkbox.checked, cri4Checkbox.checked);
             }
         });
@@ -665,16 +688,35 @@ function finalizeFlights() {
     // Rebuild the DOM based on the updated flights structure
     console.log(updatedFlightsPerDay)
 //    rebuildDOMWithFinalizedFlights(updatedFlightsPerDay);
-//    alert('Flights finalized successfully.');
     document.getElementById("golfer-setup").style.display="none";
     document.getElementById("golfer-details").style.display="none";
     document.getElementById("finalFlightsSummary").style.display="block";
 
-    id="finalFlightsSummary"    
-    return updatedFlightsPerDay
+//  populateGolfers
+    for (let i = 0; i < numGolfers; i++) {
+        const name = String.fromCharCode(65 + i); // Get golfer's name
+        const realName = String.fromCharCode(65 + i); // Get golfer's name
+        const hcp = Math.floor(Math.random() * 36);
+//        const color = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+        const color = "#7393B3"
+        // Generate or assign other attributes as needed
 
+        Golfers[name] = {
+            realName: realName,
+            hcp: hcp,
+            color: color,
+            buggy : false,
+            pro : false,
+            criteria1 : false,
+            criteria2 : false,
+            criteria3 : false,
+            criteria4 : false,
+        };
+    }
+    return updatedFlightsPerDay
 }
-function rebuildDOMWithFinalizedFlights(updatedFlightsPerDay) {
+
+/*function rebuildDOMWithFinalizedFlights(updatedFlightsPerDay) {
     const flightsSummaryDiv = document.getElementById('finalFlightsSummary');
     flightsSummaryDiv.innerHTML = ''; // Clear existing summary
 
@@ -691,3 +733,4 @@ function rebuildDOMWithFinalizedFlights(updatedFlightsPerDay) {
         flightsSummaryDiv.appendChild(daySummaryDiv);
     });
 }
+*/
