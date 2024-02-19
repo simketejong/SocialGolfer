@@ -3,12 +3,12 @@ let schedule = []
 let flightsPerDay = []
 
 document.addEventListener('DOMContentLoaded', () => {
-    const golfers = 'ABCDEFGHIJKLMNOPQRST'.split('');
-    schedule = generateSchedule(golfers, 5); // 5 days of tournament
-    const playMatrix = generatePlayMatrix(schedule);
-    displayPlayMatrix(playMatrix);    
-    displaySchedule(schedule);
-    assignDragAndDrop();
+//    const golfers = 'ABCDEFGHIJKLMNOPQRST'.split('');
+//    schedule = generateSchedule(golfers, 5); // 5 days of tournament
+//    const playMatrix = generatePlayMatrix(schedule);
+//    displayPlayMatrix(playMatrix);    
+//    displaySchedule(schedule);
+//    assignDragAndDrop();
 });
 function generateSchedule(golfers, days) {
     for (let day = 0; day < days; day++) {
@@ -23,7 +23,6 @@ function generateSchedule(golfers, days) {
         }
         schedule.push(dailyFlights);
     }
-// TODO: Moet input screen maken, aantal dagen aantal spelelers, aantal flights per dag
 // TODO: Bij het maken koppel moet ergens naam en aan letter koppelen met attributen
 // TODO: Input gaat na sort.py die een array probeer te maken de resultaat gaat naar schedule.js
 //    schedule = [[["L","H","S","J"],["D","R","F","N"],["G","T","M",],["O","Q","A"],["I","P","B"],["E","K","C"]],
@@ -108,6 +107,7 @@ function displaySchedule(schedule) {
     });
 }
 function assignDragAndDrop() {
+    //FIXIT: Now drag and drop doesnt work
     let draggedItem = null;
 
     document.querySelectorAll('.golfer').forEach(golferDiv => {
@@ -377,6 +377,8 @@ function generatePlayMatrix(schedule) {
 }
 function displayPlayMatrix(playMatrix) {
     const matrixDiv = document.createElement('div');
+    matrixDiv.setAttribute("id","Matrix");
+    matrixDiv.setAttribute('style',"display:none")
     const table = document.createElement('table');
     table.border = 1; // Add border for visibility, adjust styling as needed
 
@@ -497,7 +499,12 @@ function pythonReturn(data){
     schedule=JSON.parse(validJsonString);
     var scheduleDiv = document.getElementById('schedule');
     scheduleDiv.innerHTML = '';
+    document.getElementById("finalFlightsSummary").style.display="none";
+ //   document.getElementById("SaveData").style.display="block";
+    document.getElementById("SaveData").style.display="block";
+    document.getElementById("schedule").style.display="block";
     displaySchedule(schedule)
+    assignDragAndDrop();
 }
 function recalculateHcpForFlights() {
     document.querySelectorAll('.flight').forEach(flightDiv => {
@@ -636,7 +643,7 @@ function finalizeFlights() {
     let updatedFlightsPerDay = [];
 
     // Iterate through each day to collect flight information
-    const numDays = parseInt(document.getElementById('numDays').value, 10);
+    const numDays = parseInt(document.getElementById('numDays').value, 10);   
     for (let day = 0; day < numDays; day++) {
         const flights = document.querySelectorAll(`.day${day}-flight`);
         let dayFlights = [];
@@ -657,9 +664,15 @@ function finalizeFlights() {
 
     // Rebuild the DOM based on the updated flights structure
     console.log(updatedFlightsPerDay)
-    rebuildDOMWithFinalizedFlights(updatedFlightsPerDay);
+//    rebuildDOMWithFinalizedFlights(updatedFlightsPerDay);
+//    alert('Flights finalized successfully.');
+    document.getElementById("golfer-setup").style.display="none";
+    document.getElementById("golfer-details").style.display="none";
+    document.getElementById("finalFlightsSummary").style.display="block";
+
+    id="finalFlightsSummary"    
     return updatedFlightsPerDay
-    alert('Flights finalized successfully.');
+
 }
 function rebuildDOMWithFinalizedFlights(updatedFlightsPerDay) {
     const flightsSummaryDiv = document.getElementById('finalFlightsSummary');
