@@ -202,7 +202,7 @@ function assignDragAndDrop() {
         recalculateHcpForFlights();
     }
 }
-function openPopup(golferDiv) {
+function openPopup(golferDiv, golfer) {
     const popup = document.getElementById('popup');
     const naam = document.getElementById('naam-input');
     HCP = document.getElementById('hcp-input'); // New input for the identifier
@@ -214,7 +214,7 @@ function openPopup(golferDiv) {
     const cri3Checkbox = document.getElementById('criteria_3-checkbox');    
     const cri4Checkbox = document.getElementById('criteria_4-checkbox');        
     const okButton = document.getElementById('ok-button');
-
+    
     golfers=golferDiv.getAttribute("golfer");
     HCP.value=golferDiv.getAttribute("hcp");
     
@@ -238,6 +238,7 @@ function openPopup(golferDiv) {
         const originalName = golferDiv.dataset.originalName;
         document.querySelectorAll('.golfer').forEach(golferDiv => {
             if (golferDiv.getAttribute("golfer") === golfers) {
+                alert(JSON.stringify(golferDiv.getAttribute("class")))            
                 // Update the golfer's display name if you have a specific spanss or div for it
                 const nameSpan = golferDiv.querySelector('.span');
                 golferDiv.style.backgroundColor = colorPicker.value;
@@ -252,7 +253,7 @@ function openPopup(golferDiv) {
                 golferDiv.classList.toggle('cri3', cri3Checkbox.checked);
                 golferDiv.classList.toggle('cri4', cri4Checkbox.checked);  
                 golferDiv.setAttribute("hcp",HCP.value);  
-                Golfers[golfers].hcp = HCP.value;
+                Golfers[golfers].hcp = HCP.value
                 updateIcons(golferDiv, buggyCheckbox.checked, proCheckbox.checked, cri1Checkbox.checked , cri2Checkbox.checked, cri3Checkbox.checked, cri4Checkbox.checked);
             }
         });
