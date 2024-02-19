@@ -91,6 +91,8 @@ function displaySchedule(schedule) {
                 }
                 
                 // Insert the golfer span, checkbox, and hcp display in the correct order
+                displayName=Golfers[golfer].realName;
+                displayHcp=Golfers[golfer].hcp;
                 golferDiv.innerHTML = `
                     <span class="span" onclick="displayGolferInfoPopup('${golfer}')">${golfer}</span>
                     <div class="hcp-display">${golferDiv.getAttribute('hcp')}</div> 
@@ -238,26 +240,36 @@ function openPopup(golferDiv, golfer) {
         const originalName = golferDiv.dataset.originalName;
         document.querySelectorAll('.golfer').forEach(golferDiv => {
             if (golferDiv.getAttribute("golfer") === golfers) {
-                alert(JSON.stringify(golferDiv.getAttribute("class")))            
+                const hcpDisplayDiv = golferDiv.querySelector('.hcp-display');
+                if (hcpDisplayDiv) {
+                    hcpDisplayDiv.textContent = HCP.value;
+                }         
                 // Update the golfer's display name if you have a specific spanss or div for it
                 const nameSpan = golferDiv.querySelector('.span');
                 golferDiv.style.backgroundColor = colorPicker.value;
                 Golfers[golfers].color = colorPicker.value;
                 nameSpan.textContent = naam.value;
                 Golfers[golfers].realName = naam.value;
+                alert(naam.value)
                 golferDiv.classList.toggle('buggy', buggyCheckbox.checked);
                 Golfers[golfers].buggy = buggyCheckbox.checked;
                 golferDiv.classList.toggle('pro', proCheckbox.checked);
+                Golfers[golfers].pro = buggyCheckbox.checked;                
                 golferDiv.classList.toggle('cri1', cri1Checkbox.checked);
+                Golfers[golfers].cri1 = buggyCheckbox.checked;                
                 golferDiv.classList.toggle('cri2', cri2Checkbox.checked);
+                Golfers[golfers].cri2 = buggyCheckbox.checked;                
                 golferDiv.classList.toggle('cri3', cri3Checkbox.checked);
-                golferDiv.classList.toggle('cri4', cri4Checkbox.checked);  
+                Golfers[golfers].cri3 = buggyCheckbox.checked;                
+                golferDiv.classList.toggle('cri4', cri4Checkbox.checked); 
+                Golfers[golfers].cri4 = buggyCheckbox.checked;                
                 golferDiv.setAttribute("hcp",HCP.value);  
                 Golfers[golfers].hcp = HCP.value
                 updateIcons(golferDiv, buggyCheckbox.checked, proCheckbox.checked, cri1Checkbox.checked , cri2Checkbox.checked, cri3Checkbox.checked, cri4Checkbox.checked);
             }
         });
-        // Hide popup
+//      Golfers[golfers].realName = "Simke"
+        console.log(JSON.stringify(Golfers[golfers]))
         popup.style.display = 'none';
     };
 }
