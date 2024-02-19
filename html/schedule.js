@@ -65,6 +65,13 @@ function generateGolferColors() {
     return colors;
 }
 function displaySchedule(schedule) {
+    const buggyCheckbox = document.getElementById('buggy-checkbox');
+    const proCheckbox = document.getElementById('pro-checkbox');
+    const cri1Checkbox = document.getElementById('criteria_1-checkbox');
+    const cri2Checkbox = document.getElementById('criteria_2-checkbox');
+    const cri3Checkbox = document.getElementById('criteria_3-checkbox');    
+    const cri4Checkbox = document.getElementById('criteria_4-checkbox');
+
     const scheduleDiv = document.getElementById('schedule');
     const golferColors = generateGolferColors(); // Assuming this function generates colors for each golfer
 
@@ -94,7 +101,7 @@ function displaySchedule(schedule) {
                 displayName=Golfers[golfer].realName;
                 displayHcp=Golfers[golfer].hcp;
                 golferDiv.innerHTML = `
-                    <span class="span" onclick="displayGolferInfoPopup('${golfer}')">${golfer}</span>
+                    <span class="span" onclick="displayGolferInfoPopup('${golfer}')">${displayName}</span>
                     <div class="hcp-display">${golferDiv.getAttribute('hcp')}</div> 
                     <input type="checkbox" class="checkbox">
                 `; // HCP is displayed here as requested
@@ -106,6 +113,15 @@ function displaySchedule(schedule) {
                 menu.setAttribute("onclick", "openPopup(this.closest('.golfer'))");
                 menu.innerHTML = '&#9776;';
                 golferDiv.insertBefore(menu, golferDiv.firstChild); // Insert the menu at the beginning
+
+// Icons
+                buggyCheckbox.checked = Golfers[golfer].buggy;
+                proCheckbox.checked = Golfers[golfer].pro;
+                cri1Checkbox.checked = Golfers[golfer].criteria1;
+                cri2Checkbox.checked = Golfers[golfer].criteria2;
+                cri3Checkbox.checked = Golfers[golfer].criteria3;
+                cri4Checkbox.checked = Golfers[golfer].criteria4;
+                updateIcons(golferDiv, buggyCheckbox.checked, proCheckbox.checked, cri1Checkbox.checked , cri2Checkbox.checked, cri3Checkbox.checked, cri4Checkbox.checked);
 
                 flightDiv.appendChild(golferDiv);
 
@@ -204,7 +220,7 @@ function assignDragAndDrop() {
         recalculateHcpForFlights();
     }
 }
-function openPopup(golferDiv, golfer) {
+function openPopup(golferDiv) {
     const popup = document.getElementById('popup');
     const naam = document.getElementById('naam-input');
     HCP = document.getElementById('hcp-input'); // New input for the identifier
@@ -254,15 +270,15 @@ function openPopup(golferDiv, golfer) {
                 golferDiv.classList.toggle('buggy', buggyCheckbox.checked);
                 Golfers[golfers].buggy = buggyCheckbox.checked;
                 golferDiv.classList.toggle('pro', proCheckbox.checked);
-                Golfers[golfers].pro = buggyCheckbox.checked;                
+                Golfers[golfers].pro = proCheckbox.checked;                
                 golferDiv.classList.toggle('cri1', cri1Checkbox.checked);
-                Golfers[golfers].cri1 = buggyCheckbox.checked;                
+                Golfers[golfers].criteria1 = cri1Checkbox.checked;                
                 golferDiv.classList.toggle('cri2', cri2Checkbox.checked);
-                Golfers[golfers].cri2 = buggyCheckbox.checked;                
+                Golfers[golfers].criteria2 = cri2Checkbox.checked;                
                 golferDiv.classList.toggle('cri3', cri3Checkbox.checked);
-                Golfers[golfers].cri3 = buggyCheckbox.checked;                
+                Golfers[golfers].criteria3 = cri3Checkbox.checked;                
                 golferDiv.classList.toggle('cri4', cri4Checkbox.checked); 
-                Golfers[golfers].cri4 = buggyCheckbox.checked;                
+                Golfers[golfers].criteria4 = cri4Checkbox.checked;                
                 golferDiv.setAttribute("hcp",HCP.value);  
                 Golfers[golfers].hcp = HCP.value
                 updateIcons(golferDiv, buggyCheckbox.checked, proCheckbox.checked, cri1Checkbox.checked , cri2Checkbox.checked, cri3Checkbox.checked, cri4Checkbox.checked);
@@ -711,7 +727,8 @@ function finalizeFlights() {
         const realName = String.fromCharCode(65 + i); // Get golfer's name
         const hcp = Math.floor(Math.random() * 36);
 //        const color = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-        const color = "#7393B3"
+        const color = `#${(16211215 + i*50).toString(16)}`;
+//        const color = "#"+"7393B3"
         // Generate or assign other attributes as needed
 
         Golfers[name] = {
