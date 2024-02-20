@@ -534,25 +534,20 @@ function searchSolution() {
             flights.forEach((flightDiv) => {
                 const golfersInFlight = [];
                 const golfers = flightDiv.querySelectorAll('.golfer');
-    
-                golfers.forEach((golferDiv) => { // TODO: Speler staat op verkeerde positie in array
-                    checkPush=false
+                
+                teller = 0 //index
+                golfers.forEach((golferDiv) => { 
+
                     const golferId = golferDiv.getAttribute('golfer'); // assuming golfer attribute holds the identifier
                     const checkboxe = flightDiv.querySelectorAll('.golfer .checkbox');
-                    console.log(golferId)
-                    checkboxe.forEach(checkbox => {
-                        if (checkbox.checked && !checkPush) {
-                            // Find the closest parent golfer div to access golfer attributes
-                            const golferElement = checkbox.closest('.golfer');
-                            if (!golfersInFlight.includes(golferElement.getAttribute('golfer'))){
-                                    golfersInFlight.push(golferElement.getAttribute('golfer'));                            
-                                    checkPush=true
-                                }
-                        }
-                    })
-                    if (!checkPush){
-                        golfersInFlight.push("?");    
+                    console.log(golferId + " "+JSON.stringify(checkboxe[teller]))
+                    if (checkboxe[teller].checked){
+                        golfersInFlight.push(golferId);                        
                     }
+                    else{
+                        golfersInFlight.push("?");
+                    }
+                    teller=teller+1
                 });
                 flightsForDay.push(golfersInFlight);
             });
