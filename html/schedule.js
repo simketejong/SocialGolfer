@@ -2,6 +2,7 @@ let golverDiv = []
 let schedule = []
 let flightsPerDay = []
 var Golfers = {};
+var pop = []
 
 document.addEventListener('DOMContentLoaded', () => {
 //    const golfers = 'ABCDEFGHIJKLMNOPQRST'.split('');
@@ -42,12 +43,10 @@ function populateGolfers() {
         const name = document.getElementById(`golferName${i}`).value; // Get golfer's name
         const hcp = document.getElementById(`golferHcp${i}`).value; // Get golfer's handicap
         const color = generateGolferColor(name); // Placeholder for a function that determines golfer's color
-        // Generate or assign other attributes as needed
-
- 
-        Golfers[name] = {
+         Golfers[name] = {
             hcp: hcp,
             color: color,
+            taged : [],
         };
     }
 }
@@ -99,18 +98,18 @@ function displaySchedule(schedule) {
                 // Insert the golfer span, checkbox, and hcp display in the correct order
                 displayName=Golfers[golfer].realName;
                 displayHcp=Golfers[golfer].hcp;
-                if (Golfers[golfer].taged) {
+                if (Golfers[golfer].taged[fIndex]) {
                     golferDiv.innerHTML =`
                     <span class="span" onclick="displayGolferInfoPopup('${golfer}')">${displayName}</span>
                     <div class="hcp-display">${golferDiv.getAttribute('hcp')}</div> 
-                    <input type="checkbox" onchange="update_value(this,'${golfer}')" class="checkbox" checked >
+                    <input type="checkbox" onchange="update_value(this,'${golfer}',${fIndex})" class="checkbox" checked >
                 `;
                 }
                 else{
                 golferDiv.innerHTML = `
                     <span class="span" onclick="displayGolferInfoPopup('${golfer}')">${displayName}</span>
                     <div class="hcp-display">${golferDiv.getAttribute('hcp')}</div> 
-                    <input type="checkbox" onchange="update_value(this,'${golfer}')" class="checkbox">
+                    <input type="checkbox" onchange="update_value(this,'${golfer}',${fIndex})" class="checkbox">
                 `;
                 }
 
@@ -150,15 +149,16 @@ function displaySchedule(schedule) {
         });
         scheduleDiv.appendChild(dayDiv);
     });        
-//    console.log(JSON.stringify(Golfers))
+    console.log(JSON.stringify(pop))
+    console.log(JSON.stringify(Golfers))
 }
-function update_value(chk_bx, golfer){
+function update_value(chk_bx, golfer, dag){
     if(chk_bx.checked)
     {
-        Golfers[golfer].taged = true;
+        Golfers[golfer].taged[dag] = true;
     }
     else{
-        Golfers[golfer].taged = false;
+        Golfers[golfer].taged[dag] = false;
     }
 }
 function assignDragAndDrop() {
@@ -540,7 +540,6 @@ function searchSolution() {
 
                     const golferId = golferDiv.getAttribute('golfer'); // assuming golfer attribute holds the identifier
                     const checkboxe = flightDiv.querySelectorAll('.golfer .checkbox');
-                    console.log(golferId + " "+JSON.stringify(checkboxe[teller]))
                     if (checkboxe[teller].checked){
                         golfersInFlight.push(golferId);                        
                     }
@@ -751,8 +750,11 @@ function finalizeFlights() {
             criteria2 : false,
             criteria3 : false,
             criteria4 : false,
-            taged : false,
+            taged : [],
         };
+        for (let j = 0; j < numDays; j++) {
+            Golfers[name].taged.push(false)
+        }
     }
     return updatedFlightsPerDay
 }
