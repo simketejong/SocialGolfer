@@ -51,7 +51,6 @@ function populateGolfers() {
         };
     }
 }
-
 function generateGolferColors() {
     const golfers = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
     const colors = {};
@@ -114,7 +113,7 @@ function displaySchedule(schedule) {
                     <input type="checkbox" onchange="update_value(this,'${golfer}')" class="checkbox">
                 `;
                 }
-                
+
                 golferDiv.setAttribute('draggable', true);
                 
                 const menu = document.createElement('div');
@@ -157,11 +156,9 @@ function update_value(chk_bx, golfer){
     if(chk_bx.checked)
     {
         Golfers[golfer].taged = true;
-        console.log(Golfers[golfer].taged);
     }
     else{
         Golfers[golfer].taged = false;
-        console.log(Golfers[golfer].taged);
     }
 }
 function assignDragAndDrop() {
@@ -527,7 +524,7 @@ function rebuildScheduleFromDOM() {
         return scheduleTest;
 }
 function searchSolution() {
-        const scheduleTest = [];
+        const schedule = [];
         const days = document.querySelectorAll('#schedule > div');
     
         days.forEach((dayDiv) => {
@@ -542,6 +539,7 @@ function searchSolution() {
                     checkPush=false
                     const golferId = golferDiv.getAttribute('golfer'); // assuming golfer attribute holds the identifier
                     const checkboxe = flightDiv.querySelectorAll('.golfer .checkbox');
+                    console.log(golferId)
                     checkboxe.forEach(checkbox => {
                         if (checkbox.checked && !checkPush) {
                             // Find the closest parent golfer div to access golfer attributes
@@ -559,11 +557,10 @@ function searchSolution() {
                 flightsForDay.push(golfersInFlight);
             });
     
-            scheduleTest.push(flightsForDay);
+            schedule.push(flightsForDay);
         });
-//        console.log(JSON.stringify(schedule));       
-//        console.log(JSON.stringify(scheduleTest));   
-        return scheduleTest;
+        console.log(JSON.stringify(schedule));       
+        return schedule;
 }
 function pythonReturn(data){
     jsonString=data.trim();
