@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         schedule.push(dailyFlights);
     }
-// TODO: Bij het maken koppel moet ergens naam en aan letter koppelen met attributen
+
 //    schedule = [[["L","H","S","J"],["D","R","F","N"],["G","T","M",],["O","Q","A"],["I","P","B"],["E","K","C"]],
 //                [["D","B","A","M"],["I","C","P","L"],["J","S","T","Q"],["K","F","R","E"],["N","O","H","G"]],
 //                [["T","K","L","S"],["Q","D","R","F"],["N","H","G","M"],["A","C","J","B"],["O","P","E","I"]],
@@ -100,12 +100,21 @@ function displaySchedule(schedule) {
                 // Insert the golfer span, checkbox, and hcp display in the correct order
                 displayName=Golfers[golfer].realName;
                 displayHcp=Golfers[golfer].hcp;
+                if (Golfers[golfer].taged) {
+                    golferDiv.innerHTML =`
+                    <span class="span" onclick="displayGolferInfoPopup('${golfer}')">${displayName}</span>
+                    <div class="hcp-display">${golferDiv.getAttribute('hcp')}</div> 
+                    <input type="checkbox" onchange="update_value(this,'${golfer}')" class="checkbox" checked >
+                `;
+                }
+                else{
                 golferDiv.innerHTML = `
                     <span class="span" onclick="displayGolferInfoPopup('${golfer}')">${displayName}</span>
                     <div class="hcp-display">${golferDiv.getAttribute('hcp')}</div> 
-                    <input type="checkbox" class="checkbox">
-                `; // HCP is displayed here as requested
-
+                    <input type="checkbox" onchange="update_value(this,'${golfer}')" class="checkbox">
+                `;
+                }
+                
                 golferDiv.setAttribute('draggable', true);
                 
                 const menu = document.createElement('div');
@@ -142,7 +151,18 @@ function displaySchedule(schedule) {
         });
         scheduleDiv.appendChild(dayDiv);
     });        
-    console.log(JSON.stringify(Golfers))
+//    console.log(JSON.stringify(Golfers))
+}
+function update_value(chk_bx, golfer){
+    if(chk_bx.checked)
+    {
+        Golfers[golfer].taged = true;
+        console.log(Golfers[golfer].taged);
+    }
+    else{
+        Golfers[golfer].taged = false;
+        console.log(Golfers[golfer].taged);
+    }
 }
 function assignDragAndDrop() {
     //FIXIT: Now drag and drop doesnt work
@@ -605,9 +625,8 @@ function suggestFlights() {
                 golfersRemaining=0;
             }
             if (golfersRemaining == 8) {
-                flightsPerDay[day].push(3);
-                flightsPerDay[day].push(3);
-                flightsPerDay[day].push(3);    
+                flightsPerDay[day].push(4);
+                flightsPerDay[day].push(4);    
                 golfersRemaining=0;
             }
             if (golfersRemaining == 7) {
@@ -618,7 +637,6 @@ function suggestFlights() {
             if (golfersRemaining == 6) {
                 flightsPerDay[day].push(3);
                 flightsPerDay[day].push(3);
-                flightsPerDay[day].push(3);    
                 golfersRemaining=0;
             }
             if (golfersRemaining > 10){
@@ -727,7 +745,7 @@ function finalizeFlights() {
         const realName = String.fromCharCode(65 + i); // Get golfer's name
         const hcp = Math.floor(Math.random() * 36);
 //        const color = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-        const color = `#${(16211215 + i*50).toString(16)}`;
+        const color = `#${(13211215 + i*50).toString(16)}`;
 //        const color = "#"+"7393B3"
         // Generate or assign other attributes as needed
 
@@ -741,6 +759,7 @@ function finalizeFlights() {
             criteria2 : false,
             criteria3 : false,
             criteria4 : false,
+            taged : false,
         };
     }
     return updatedFlightsPerDay
