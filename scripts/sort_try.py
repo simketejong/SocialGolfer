@@ -4,15 +4,9 @@ import ast
 
 players_per_flight = [
     # Day 1
-    [4, 4, 4, 4, 4, 3, 3],  # 5 flights with 4 players each
+    [4, 4],  
     # Day 2
-    [4, 4, 4, 4, 4, 3, 3],  # 5 flights with 4 players each
-    # Day 3
-    [4, 4, 4, 4, 4, 3, 3],  # 5 flights with 4 players each
-    # Day 4
-    [3, 3, 3, 3, 3, 3, 4, 4],  # 5 flights with 4 players each
-    # Day 5
-    [4, 4, 4, 4, 4, 3, 3]  # 5 flights with 4 players each
+    [4, 4]  
 ]
 
 class Golfer:
@@ -36,7 +30,7 @@ def total_golfers():
         return 0  
 
 def organize_flights(players,info):
-    ret=[]
+    ret = []
     total_days = len(players_per_flight)
     schedule = [[[] for _ in range(max([player.flights[day] for player in players if day < len(player.flights)]) + 1)] for day in range(total_days)]
 
@@ -51,7 +45,6 @@ def organize_flights(players,info):
     ret.append(info)
     ret.append(schedule)
     return ret
-    
 
 ##tempBuggy(players)
 '''
@@ -187,25 +180,12 @@ def parse_array_argument(array_str):
         return None
 
 
-parser = argparse.ArgumentParser(description="Process the given array.")
-parser.add_argument("--GivenArray", type=str, help="Array in string format", default="[]")   
-parser.add_argument("--players_per_flight", type=str, help="Array in string format", default="[]")
-args = parser.parse_args()    
-Given_Array = parse_array_argument(args.GivenArray)   
-if Given_Array is None:
-    Given_Array = []
-Array = parse_array_argument(args.players_per_flight)   
-if Array is not None:
-    players_per_flight = Array
 players = []
 AantalPogingen=10000
 LaagsteDubbels=1000
 
 while (AantalPogingen > 0):
-    if (len(Given_Array) > 0):
-        update_players_and_flights_from_schedule(Given_Array)
-    else:
-        ResetPlayers()
+    ResetPlayers()
     ZoekOplossing()
     if dubbels < LaagsteDubbels:
         LaagsteDubbels=dubbels
@@ -214,9 +194,12 @@ while (AantalPogingen > 0):
     else:
         AantalPogingen=AantalPogingen-1
 
+if dubbels == 0 :
+    print(organize_flights(players))
+
 if AantalPogingen == 0 :
-    print(organize_flights(players,LaagsteDubbels))
+    print(organize_flights(players,dubbels))
 # TODO: Maak een iratieve process die optimaal vind met aantal dubbels en deze twee moeten terug , dus aantal dubbles en hoeveel keer gezocht
-#    print(f"Timeout MinDubbels = {LaagsteDubbels}")
-#print(f"Dubbels {LaagsteDubbels}")
+    print(f"Timeout MinDubbels = {LaagsteDubbels}")
+print(f"Dubbels {LaagsteDubbels}")
 

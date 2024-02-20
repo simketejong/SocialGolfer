@@ -2,7 +2,7 @@ let golverDiv = []
 let schedule = []
 let flightsPerDay = []
 var Golfers = {};
-var pop = []
+var doubles = 100
 
 document.addEventListener('DOMContentLoaded', () => {
 //    const golfers = 'ABCDEFGHIJKLMNOPQRST'.split('');
@@ -98,18 +98,18 @@ function displaySchedule(schedule) {
                 // Insert the golfer span, checkbox, and hcp display in the correct order
                 displayName=Golfers[golfer].realName;
                 displayHcp=Golfers[golfer].hcp;
-                if (Golfers[golfer].taged[fIndex]) {
+                if (Golfers[golfer].taged[index] == fIndex) {
                     golferDiv.innerHTML =`
                     <span class="span" onclick="displayGolferInfoPopup('${golfer}')">${displayName}</span>
                     <div class="hcp-display">${golferDiv.getAttribute('hcp')}</div> 
-                    <input type="checkbox" onchange="update_value(this,'${golfer}',${fIndex})" class="checkbox" checked >
+                    <input type="checkbox" onchange="update_value(this,'${golfer}',${index},${fIndex})," class="checkbox" checked >
                 `;
                 }
                 else{
                 golferDiv.innerHTML = `
                     <span class="span" onclick="displayGolferInfoPopup('${golfer}')">${displayName}</span>
                     <div class="hcp-display">${golferDiv.getAttribute('hcp')}</div> 
-                    <input type="checkbox" onchange="update_value(this,'${golfer}',${fIndex})" class="checkbox">
+                    <input type="checkbox" onchange="update_value(this,'${golfer}',${index},${fIndex})" class="checkbox">
                 `;
                 }
 
@@ -149,16 +149,15 @@ function displaySchedule(schedule) {
         });
         scheduleDiv.appendChild(dayDiv);
     });        
-    console.log(JSON.stringify(pop))
-    console.log(JSON.stringify(Golfers))
+//    console.log(JSON.stringify(Golfers))
 }
-function update_value(chk_bx, golfer, dag){
+function update_value(chk_bx, golfer, dag, flight){
     if(chk_bx.checked)
     {
-        Golfers[golfer].taged[dag] = true;
+        Golfers[golfer].taged[dag] = flight;
     }
     else{
-        Golfers[golfer].taged[dag] = false;
+        Golfers[golfer].taged[dag] = flight;
     }
 }
 function assignDragAndDrop() {
@@ -537,7 +536,6 @@ function searchSolution() {
                 
                 teller = 0 //index
                 golfers.forEach((golferDiv) => { 
-
                     const golferId = golferDiv.getAttribute('golfer'); // assuming golfer attribute holds the identifier
                     const checkboxe = flightDiv.querySelectorAll('.golfer .checkbox');
                     if (checkboxe[teller].checked){
@@ -559,12 +557,16 @@ function searchSolution() {
 function pythonReturn(data){
     jsonString=data.trim();
     let validJsonString = jsonString.replace(/'/g, '"');    
-    schedule=JSON.parse(validJsonString);
+    both=JSON.parse(validJsonString);
+    doubles=both[0];
+    schedule=both[1];
+    var displayDoubles = document.getElementById('SaveData');
+    displayDoubles.innerHTML = '';
+    displayDoubles.append("Golf Tournament Schedule (Aantal dubbels = " +doubles+" )")
     var scheduleDiv = document.getElementById('schedule');
     scheduleDiv.innerHTML = '';
     document.getElementById("finalFlightsSummary").style.display="none";
- //   document.getElementById("SaveData").style.display="block";
-    document.getElementById("SaveData").style.display="block";
+     document.getElementById("SaveData").style.display="block";
     document.getElementById("schedule").style.display="block";
     displaySchedule(schedule)
     assignDragAndDrop();
@@ -753,7 +755,7 @@ function finalizeFlights() {
             taged : [],
         };
         for (let j = 0; j < numDays; j++) {
-            Golfers[name].taged.push(false)
+            Golfers[name].taged.push(-1)
         }
     }
     return updatedFlightsPerDay

@@ -24,7 +24,3 @@ def application(environ, start_response):
     start_response(status, response_headers)   
     terug=result.stdout.encode()
     return [terug]
-
-    #data_json = json.dumps(data)  # Convert the array to a JSON string
-    #start_response('200 OK', [('Content-Type', 'application/json')])
-    #return [data_json.encode()]  # Return the JSON string as a byte object
