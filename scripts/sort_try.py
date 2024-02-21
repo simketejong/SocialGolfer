@@ -4,9 +4,9 @@ import ast
 
 players_per_flight = [
     # Day 1
-    [4, 4],  
+    [4, 4],
     # Day 2
-    [4, 4]  
+    [4, 4]
 ]
 
 class Golfer:
@@ -27,22 +27,18 @@ def total_golfers():
     if players_per_flight:
         return sum(players_per_flight[0])
     else:
-        return 0  
+        return 0
 
-def organize_flights(players,info):
+def organize_flights(players,info, aantal):
     ret = []
     total_days = len(players_per_flight)
     schedule = [[[] for _ in range(max([player.flights[day] for player in players if day < len(player.flights)]) + 1)] for day in range(total_days)]
-
-    # Iterate through each golfer
     for player in players:
-        # Iterate through each day in the golfer's flights list
         for day, flight in enumerate(player.flights):
-            # Check if the day index exists in the player's flights list
             if day < total_days:
-                # Add the player's number (or any other identifier) to the correct flight and day
                 schedule[day][flight].append(player.name)
     ret.append(info)
+    ret.append(aantal)
     ret.append(schedule)
     return ret
 
@@ -84,7 +80,7 @@ def FindPlayerToJoin(day,flight_nummer,flight_indeling):
     for player in players:
         kan = True
         if len(player.flights) != (day + 1): # Is nog niet ingedeeld vandaag
-            if player.name not in flight_indeling: 
+            if player.name not in flight_indeling:
                 for Persoon in flight_indeling:
                     for player1 in players:
                         if player1.name == Persoon:
@@ -106,7 +102,7 @@ def FindPlayerToJoin(day,flight_nummer,flight_indeling):
                         for muteer in flight_indeling:
                             if player.name != muteer:
                                 player.played_against.append(muteer)
-            gelukt=True     
+            gelukt=True
             return(flight_indeling)
     geenplek=WieNiet(day)
 
@@ -116,7 +112,7 @@ def ZoekOplossing():
         for flight_nummer in range(len(flights)): # dus index 0 is eerste van [4, 4, 4, 4, 4, 3, 3]
             GroteFlight=flights[flight_nummer]
             for FlightSpeler in range(GroteFlight): # flight is 0,1,2,3,4
-                flight_indeling=DoesFlightNeedPlayers(day,flight_nummer) # Stel dat er al een indeling is dan 
+                flight_indeling=DoesFlightNeedPlayers(day,flight_nummer) # Stel dat er al een indeling is dan
                 if len(flight_indeling) < GroteFlight: # Is flight al vol ?
                     flight_indeling=FindPlayerToJoin(day,flight_nummer,flight_indeling)
  #           print(f"dag {day} indeling {flight_indeling}")
@@ -179,7 +175,40 @@ def parse_array_argument(array_str):
         # Return None to indicate a parsing error
         return None
 
+def MinimaalDubbels(Aantal):
+    LaagsteDubbels=1000
+    while (Aantal > 0):
+        ResetPlayers()
+        ZoekOplossing()
+        if dubbels < LaagsteDubbels:
+            LaagsteDubbels=dubbels
+        if dubbels == 0:
+            Aantal=0
+        else:
+            Aantal=Aantal-1
+        if dubbels == 0 :
+            return ((organize_flights(players,LaagsteDubbels,Aantal)))
+        if Aantal == 0 :
+            return ((organize_flights(players,LaagsteDubbels,Aantal)))
+#        print("aantaldubbels = " + str(dubbels))
 
+'''
+while (AantalPogingen > 0):
+    ResetPlayers()
+    ZoekOplossing()
+    if dubbels < LaagsteDubbels:
+        LaagsteDubbels=dubbels
+    if dubbels == 0:
+        AantalPogingen=0
+    else:
+        AantalPogingen=AantalPogingen-1
+'''
+players = []
+print(MinimaalDubbels(100000))
+
+
+
+'''
 players = []
 AantalPogingen=10000
 LaagsteDubbels=1000
@@ -202,4 +231,4 @@ if AantalPogingen == 0 :
 # TODO: Maak een iratieve process die optimaal vind met aantal dubbels en deze twee moeten terug , dus aantal dubbles en hoeveel keer gezocht
     print(f"Timeout MinDubbels = {LaagsteDubbels}")
 print(f"Dubbels {LaagsteDubbels}")
-
+'''

@@ -562,7 +562,7 @@ function pythonReturn(data){
     schedule=both[1];
     var displayDoubles = document.getElementById('SaveData');
     displayDoubles.innerHTML = '';
-    displayDoubles.append("Golf Tournament Schedule (Aantal dubbels = " +doubles+" )")
+    displayDoubles.append("Golf Tournament Schedule (Aantal dubbels = " +doubles+" )+")
     var scheduleDiv = document.getElementById('schedule');
     scheduleDiv.innerHTML = '';
     document.getElementById("finalFlightsSummary").style.display="none";
