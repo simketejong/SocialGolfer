@@ -4,9 +4,9 @@ import ast
 
 players_per_flight = [
     # Day 1
-    [4, 4],
+    [4, 4, 3],
     # Day 2
-    [4, 4]
+    [4, 4, 3]
 ]
 
 class Golfer:
@@ -76,6 +76,7 @@ def WieNiet(day):
 def FindPlayerToJoin(day,flight_nummer,flight_indeling):
     kan = True
     gelukt = False
+    grote=len(flight_indeling)
     random.shuffle(players)
     for player in players:
         kan = True
@@ -104,7 +105,12 @@ def FindPlayerToJoin(day,flight_nummer,flight_indeling):
                                 player.played_against.append(muteer)
             gelukt=True
             return(flight_indeling)
-    geenplek=WieNiet(day)
+    geenplekdag.append(day)
+    geenplekdag.append(flight_nummer)
+    geenplekdag.append(grote)        
+    geenplekdag.append(players_per_flight[day][flight_nummer])    
+    geenplekdag.append(flight_indeling)
+    geenplekdag.append(WieNiet(day))
 
 
 def ZoekOplossing():
@@ -132,9 +138,10 @@ def LaatAlleZien():
         print("Criteria 4:", player.criteria4)
         print()
 def ResetPlayers():
-    global players, dubbels
+    global players, dubbels, geenplekdag
     players = []
     dubbels = 0
+    geenplekdag = []
     for i in range(1, total_golfers() + 1 ):
         name = f"{chr(i + 64)}" # temp
         handicap = random.randint(0,35)  # temp
@@ -175,60 +182,28 @@ def parse_array_argument(array_str):
         # Return None to indicate a parsing error
         return None
 
-def MinimaalDubbels(Aantal):
+def MinimaalDubbels(Aantal,hoeveeldubbels):
     LaagsteDubbels=1000
     while (Aantal > 0):
         ResetPlayers()
         ZoekOplossing()
         if dubbels < LaagsteDubbels:
             LaagsteDubbels=dubbels
-        if dubbels == 0:
+        if dubbels == hoeveeldubbels:
             Aantal=0
         else:
             Aantal=Aantal-1
-        if dubbels == 0 :
+        if dubbels == hoeveeldubbels :
             return ((organize_flights(players,LaagsteDubbels,Aantal)))
         if Aantal == 0 :
             return ((organize_flights(players,LaagsteDubbels,Aantal)))
 #        print("aantaldubbels = " + str(dubbels))
 
-'''
-while (AantalPogingen > 0):
-    ResetPlayers()
-    ZoekOplossing()
-    if dubbels < LaagsteDubbels:
-        LaagsteDubbels=dubbels
-    if dubbels == 0:
-        AantalPogingen=0
-    else:
-        AantalPogingen=AantalPogingen-1
-'''
 players = []
-print(MinimaalDubbels(100000))
+geenplekdag = []
 
-
-
-'''
-players = []
-AantalPogingen=10000
-LaagsteDubbels=1000
-
-while (AantalPogingen > 0):
-    ResetPlayers()
-    ZoekOplossing()
-    if dubbels < LaagsteDubbels:
-        LaagsteDubbels=dubbels
-    if dubbels == 0:
-        AantalPogingen=0
-    else:
-        AantalPogingen=AantalPogingen-1
-
-if dubbels == 0 :
-    print(organize_flights(players))
-
-if AantalPogingen == 0 :
-    print(organize_flights(players,dubbels))
-# TODO: Maak een iratieve process die optimaal vind met aantal dubbels en deze twee moeten terug , dus aantal dubbles en hoeveel keer gezocht
-    print(f"Timeout MinDubbels = {LaagsteDubbels}")
-print(f"Dubbels {LaagsteDubbels}")
-'''
+lowestDubbels = (MinimaalDubbels(1000,0)[0])
+print(MinimaalDubbels(1000,lowestDubbels))
+print(geenplekdag)
+print
+print
