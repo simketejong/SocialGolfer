@@ -64,7 +64,7 @@ def AlGespeeld(golfer):
     else:
         return False
 
-def WieNiet(day):
+def WieNiet(day,nrDubbles):
     geenplek=[]
     global dubbels
     for player in players:
@@ -73,7 +73,7 @@ def WieNiet(day):
             dubbels=dubbels+1
     return (geenplek)
 
-def FindPlayerToJoin(day,flight_nummer,flight_indeling):
+def FindPlayerToJoin(day,flight_nummer,flight_indeling,nrDubbles):
     kan = True
     gelukt = False
     grote=len(flight_indeling)
@@ -110,17 +110,17 @@ def FindPlayerToJoin(day,flight_nummer,flight_indeling):
     geenplekdag.append(grote)        
     geenplekdag.append(players_per_flight[day][flight_nummer])    
     geenplekdag.append(flight_indeling)
-    geenplekdag.append(WieNiet(day))
+    geenplekdag.append(WieNiet(day,nrDubbles))
 
 
-def ZoekOplossing():
+def ZoekOplossing(nrDubbles):
     for day, flights in enumerate(players_per_flight):
         for flight_nummer in range(len(flights)): # dus index 0 is eerste van [4, 4, 4, 4, 4, 3, 3]
             GroteFlight=flights[flight_nummer]
             for FlightSpeler in range(GroteFlight): # flight is 0,1,2,3,4
                 flight_indeling=DoesFlightNeedPlayers(day,flight_nummer) # Stel dat er al een indeling is dan
                 if len(flight_indeling) < GroteFlight: # Is flight al vol ?
-                    flight_indeling=FindPlayerToJoin(day,flight_nummer,flight_indeling)
+                    flight_indeling=FindPlayerToJoin(day,flight_nummer,flight_indeling,nrDubbles)
  #           print(f"dag {day} indeling {flight_indeling}")
  #   print(organize_flights(players)) # hier nog aantal dagen automatisch doen
 
@@ -205,5 +205,7 @@ geenplekdag = []
 lowestDubbels = (MinimaalDubbels(1000,0)[0])
 print(MinimaalDubbels(1000,lowestDubbels))
 print(geenplekdag)
-print
-print
+
+ZoekOplossing()
+print(geenplekdag)
+
