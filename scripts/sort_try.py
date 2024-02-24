@@ -8,7 +8,6 @@ players_per_flight = [
     # Day 2
     [4, 4, 3]
 ]
-
 class Golfer:
     def __init__(self, number, name, handicap, pro=False, buggy=False, criteria1=False, criteria2=False, criteria3=False, criteria4=False):
         self.number = number
@@ -42,14 +41,6 @@ def organize_flights(players,info, aantal):
     ret.append(schedule)
     return ret
 
-##tempBuggy(players)
-'''
-for player in players:
-    player.criteria1 = random.choice([True, False])
-    player.criteria2 = random.choice([True, False])
-    player.criteria3 = random.choice([True, False])
-    player.criteria4 = random.choice([True, False])
-'''
 def DoesFlightNeedPlayers(day,flight_nummer):
     terug = []
     for player in players:
@@ -64,7 +55,7 @@ def AlGespeeld(golfer):
     else:
         return False
 
-def WieNiet(day,nrDubbles):
+def WieNiet(day):
     geenplek=[]
     global dubbels
     for player in players:
@@ -73,9 +64,10 @@ def WieNiet(day,nrDubbles):
             dubbels=dubbels+1
     return (geenplek)
 
-def FindPlayerToJoin(day,flight_nummer,flight_indeling,nrDubbles):
+def FindPlayerToJoin(day,flight_nummer,flight_indeling):
     kan = True
     gelukt = False
+
     grote=len(flight_indeling)
     random.shuffle(players)
     for player in players:
@@ -110,17 +102,16 @@ def FindPlayerToJoin(day,flight_nummer,flight_indeling,nrDubbles):
     geenplekdag.append(grote)        
     geenplekdag.append(players_per_flight[day][flight_nummer])    
     geenplekdag.append(flight_indeling)
-    geenplekdag.append(WieNiet(day,nrDubbles))
+#    geenplekdag.append(WieNiet(day))
 
-
-def ZoekOplossing(nrDubbles):
+def ZoekOplossing():
     for day, flights in enumerate(players_per_flight):
         for flight_nummer in range(len(flights)): # dus index 0 is eerste van [4, 4, 4, 4, 4, 3, 3]
             GroteFlight=flights[flight_nummer]
             for FlightSpeler in range(GroteFlight): # flight is 0,1,2,3,4
                 flight_indeling=DoesFlightNeedPlayers(day,flight_nummer) # Stel dat er al een indeling is dan
                 if len(flight_indeling) < GroteFlight: # Is flight al vol ?
-                    flight_indeling=FindPlayerToJoin(day,flight_nummer,flight_indeling,nrDubbles)
+                    flight_indeling=FindPlayerToJoin(day,flight_nummer,flight_indeling)
  #           print(f"dag {day} indeling {flight_indeling}")
  #   print(organize_flights(players)) # hier nog aantal dagen automatisch doen
 
@@ -137,6 +128,7 @@ def LaatAlleZien():
         print("Criteria 3:", player.criteria3)
         print("Criteria 4:", player.criteria4)
         print()
+
 def ResetPlayers():
     global players, dubbels, geenplekdag
     players = []
@@ -182,6 +174,24 @@ def parse_array_argument(array_str):
         # Return None to indicate a parsing error
         return None
 
+
+
+def OptimizeDubbles(dubble_arrays):
+    while (len(dubble_arrays) > 0):
+        dag = dubble_arrays.pop(0)
+        flight = dubble_arrays.pop(0)
+        actualSize = dubble_arrays.pop(0)
+        hasSize = dubble_arrays.pop(0)
+        missing = hasSize - actualSize
+        TheFlight = dubble_arrays.pop(0)
+        print("Dit is wie op dag "+str(dag)+" niet speelt " + str(WieNiet(dag)))
+        condidates = WieNiet(dag)
+        for person in condidates:
+            for FlightPlayer in TheFlight:
+                #Golfer.name = FlightPlayer
+
+        
+
 def MinimaalDubbels(Aantal,hoeveeldubbels):
     LaagsteDubbels=1000
     while (Aantal > 0):
@@ -199,13 +209,31 @@ def MinimaalDubbels(Aantal,hoeveeldubbels):
             return ((organize_flights(players,LaagsteDubbels,Aantal)))
 #        print("aantaldubbels = " + str(dubbels))
 
+
 players = []
 geenplekdag = []
 
 lowestDubbels = (MinimaalDubbels(1000,0)[0])
 print(MinimaalDubbels(1000,lowestDubbels))
+# [13, 0, [[
+#['D', 'H', 'A', 'F'], ['K', 'B', 'I', 'E'], ['G', 'C', 'J']
+#['C', 'F', 'I'],      ['G', 'H', 'E'],      ['B', 'D', 'J']]]]
+
+print(geenplekdag[0])
+print(geenplekdag[1])
+print(geenplekdag[2])
+print(geenplekdag[3])
+print(geenplekdag[4])
+print(geenplekdag[5])
+print(geenplekdag[6])
+print(geenplekdag[7])
+print(geenplekdag[8])
+print(geenplekdag[9])
 print(geenplekdag)
 
-ZoekOplossing()
-print(geenplekdag)
+OptimizeDubbles(geenplekdag)
+
+#[1, 0, 3, 4, ['I', 'F', 'C'], ['B', 'H', 'J', 'K', 'G', 'D', 'E', 'A'], 1, 1, 3, 4, ['G', 'H', 'E'], ['A', 'J', 'K', 'B', 'D']]
+#["B","A"]
+print(str(len(geenplekdag)))
 
