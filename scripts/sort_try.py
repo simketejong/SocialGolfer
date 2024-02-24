@@ -174,9 +174,9 @@ def parse_array_argument(array_str):
         # Return None to indicate a parsing error
         return None
 
-
-
-def OptimizeDubbles(dubble_arrays):
+def OptimizeDubbles(dubble_arrays,maxPlayedAgainst):
+    missing=0
+    gelukt=True
     while (len(dubble_arrays) > 0):
         dag = dubble_arrays.pop(0)
         flight = dubble_arrays.pop(0)
@@ -188,14 +188,30 @@ def OptimizeDubbles(dubble_arrays):
         condidates = WieNiet(dag)
         for person in condidates:
             for FlightPlayer in TheFlight:
-                #Golfer.name = FlightPlayer
+                for player in players:
+                    if ((player.name == FlightPlayer) & (missing > 0)):
+                        amount=player.played_against.count(person)
+                        if amount <= maxPlayedAgainst:
+                            for playing in players:
+                                if (playing.name == person):
+                                    playing.flights.append(flight)
+                                    TheFlight.append(person)
+                                    missing=missing-1
+                                    for Persoon in TheFlight:
+                                        for player1 in players:
+                                            if player1.name == Persoon:
+                                                player1.played_against.append(person)                                
+        if (len(TheFlight) != hasSize):
+            gelukt = False
+    return gelukt    
 
-        
-
-def MinimaalDubbels(Aantal,hoeveeldubbels):
+def MinimaalDubbels(Aantal,hoeveeldubbels,Given_Array):
     LaagsteDubbels=1000
     while (Aantal > 0):
-        ResetPlayers()
+        if (len(Given_Array) > 0):
+            update_players_and_flights_from_schedule(Given_Array)
+        else:
+            ResetPlayers()
         ZoekOplossing()
         if dubbels < LaagsteDubbels:
             LaagsteDubbels=dubbels
@@ -209,31 +225,26 @@ def MinimaalDubbels(Aantal,hoeveeldubbels):
             return ((organize_flights(players,LaagsteDubbels,Aantal)))
 #        print("aantaldubbels = " + str(dubbels))
 
+parser = argparse.ArgumentParser(description="Process the given array.")
+parser.add_argument("--GivenArray", type=str, help="Array in string format", default="[]")   
+parser.add_argument("--players_per_flight", type=str, help="Array in string format", default="[]")
+args = parser.parse_args()    
+Given_Array = parse_array_argument(args.GivenArray)   
+if Given_Array is None:
+    Given_Array = []
+Array = parse_array_argument(args.players_per_flight)   
+if Array is not None:
+    players_per_flight = Array
 
 players = []
 geenplekdag = []
+Lowest=100000 # search for the lowest
 
-lowestDubbels = (MinimaalDubbels(1000,0)[0])
-print(MinimaalDubbels(1000,lowestDubbels))
-# [13, 0, [[
-#['D', 'H', 'A', 'F'], ['K', 'B', 'I', 'E'], ['G', 'C', 'J']
-#['C', 'F', 'I'],      ['G', 'H', 'E'],      ['B', 'D', 'J']]]]
+lowestDubbels = (MinimaalDubbels(Lowest,0,Given_Array)[0])
+MinimaalDubbels(Lowest,lowestDubbels,Given_Array)
 
-print(geenplekdag[0])
-print(geenplekdag[1])
-print(geenplekdag[2])
-print(geenplekdag[3])
-print(geenplekdag[4])
-print(geenplekdag[5])
-print(geenplekdag[6])
-print(geenplekdag[7])
-print(geenplekdag[8])
-print(geenplekdag[9])
-print(geenplekdag)
-
-OptimizeDubbles(geenplekdag)
-
-#[1, 0, 3, 4, ['I', 'F', 'C'], ['B', 'H', 'J', 'K', 'G', 'D', 'E', 'A'], 1, 1, 3, 4, ['G', 'H', 'E'], ['A', 'J', 'K', 'B', 'D']]
-#["B","A"]
-print(str(len(geenplekdag)))
-
+for maxdubbel in range(total_golfers()):   
+    if OptimizeDubbles(geenplekdag,maxdubbel):
+        print(organize_flights(players,0,0)) 
+#        print(str(geenplekdag))
+        exit()
