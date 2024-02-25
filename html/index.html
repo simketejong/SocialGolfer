@@ -111,7 +111,7 @@
         $('#SaveData').click(function(){
         $.ajax({
             type: "POST",
-            url: "http://localhost/test_wsgi",
+            url: "http://testserver/test_wsgi",
             data: JSON.stringify(searchSolution()),
             contentType: "application/json", // Ensure you set the content type when sending JSON
             dataType: "text", // Expecting text response from server
@@ -127,7 +127,7 @@
         $('#finalFlightsSummary').click(function(){
         $.ajax({
             type: "POST",
-            url: "http://localhost/test_array",
+            url: "http://testserver/test_array",
             data: JSON.stringify(finalizeFlights()),
             contentType: "application/json", // Ensure you set the content type when sending JSON
             dataType: "text", // Expecting text response from server
