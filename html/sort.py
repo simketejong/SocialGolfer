@@ -4,10 +4,17 @@ import ast
 
 players_per_flight = [
     # Day 1
-    [4, 4, 3],
+    [4, 4, 4, 4, 4, 3, 3],  # 5 flights with 4 players each
     # Day 2
-    [4, 4, 3]
+    [4, 4, 4, 4, 4, 3, 3],  # 5 flights with 4 players each
+    # Day 3
+    [4, 4, 4, 4, 4, 3, 3],  # 5 flights with 4 players each
+    # Day 4
+    [3, 3, 3, 3, 3, 3, 4, 4],  # 5 flights with 4 players each
+    # Day 5
+    [4, 4, 4, 4, 4, 3, 3]  # 5 flights with 4 players each
 ]
+
 class Golfer:
     def __init__(self, number, name, handicap, pro=False, buggy=False, criteria1=False, criteria2=False, criteria3=False, criteria4=False):
         self.number = number
@@ -26,21 +33,34 @@ def total_golfers():
     if players_per_flight:
         return sum(players_per_flight[0])
     else:
-        return 0
+        return 0  
 
-def organize_flights(players,info, aantal):
-    ret = []
+def organize_flights(players,info):
+    ret=[]
     total_days = len(players_per_flight)
     schedule = [[[] for _ in range(max([player.flights[day] for player in players if day < len(player.flights)]) + 1)] for day in range(total_days)]
+
+    # Iterate through each golfer
     for player in players:
+        # Iterate through each day in the golfer's flights list
         for day, flight in enumerate(player.flights):
+            # Check if the day index exists in the player's flights list
             if day < total_days:
+                # Add the player's number (or any other identifier) to the correct flight and day
                 schedule[day][flight].append(player.name)
     ret.append(info)
-    ret.append(aantal)
     ret.append(schedule)
     return ret
+    
 
+##tempBuggy(players)
+'''
+for player in players:
+    player.criteria1 = random.choice([True, False])
+    player.criteria2 = random.choice([True, False])
+    player.criteria3 = random.choice([True, False])
+    player.criteria4 = random.choice([True, False])
+'''
 def DoesFlightNeedPlayers(day,flight_nummer):
     terug = []
     for player in players:
@@ -67,13 +87,11 @@ def WieNiet(day):
 def FindPlayerToJoin(day,flight_nummer,flight_indeling):
     kan = True
     gelukt = False
-
-    grote=len(flight_indeling)
     random.shuffle(players)
     for player in players:
         kan = True
         if len(player.flights) != (day + 1): # Is nog niet ingedeeld vandaag
-            if player.name not in flight_indeling:
+            if player.name not in flight_indeling: 
                 for Persoon in flight_indeling:
                     for player1 in players:
                         if player1.name == Persoon:
@@ -95,21 +113,17 @@ def FindPlayerToJoin(day,flight_nummer,flight_indeling):
                         for muteer in flight_indeling:
                             if player.name != muteer:
                                 player.played_against.append(muteer)
-            gelukt=True
+            gelukt=True     
             return(flight_indeling)
-    geenplekdag.append(day)
-    geenplekdag.append(flight_nummer)
-    geenplekdag.append(grote)        
-    geenplekdag.append(players_per_flight[day][flight_nummer])    
-    geenplekdag.append(flight_indeling)
-#    geenplekdag.append(WieNiet(day))
+    geenplek=WieNiet(day)
+
 
 def ZoekOplossing():
     for day, flights in enumerate(players_per_flight):
         for flight_nummer in range(len(flights)): # dus index 0 is eerste van [4, 4, 4, 4, 4, 3, 3]
             GroteFlight=flights[flight_nummer]
             for FlightSpeler in range(GroteFlight): # flight is 0,1,2,3,4
-                flight_indeling=DoesFlightNeedPlayers(day,flight_nummer) # Stel dat er al een indeling is dan
+                flight_indeling=DoesFlightNeedPlayers(day,flight_nummer) # Stel dat er al een indeling is dan 
                 if len(flight_indeling) < GroteFlight: # Is flight al vol ?
                     flight_indeling=FindPlayerToJoin(day,flight_nummer,flight_indeling)
  #           print(f"dag {day} indeling {flight_indeling}")
@@ -128,12 +142,10 @@ def LaatAlleZien():
         print("Criteria 3:", player.criteria3)
         print("Criteria 4:", player.criteria4)
         print()
-
 def ResetPlayers():
-    global players, dubbels, geenplekdag
+    global players, dubbels
     players = []
     dubbels = 0
-    geenplekdag = []
     for i in range(1, total_golfers() + 1 ):
         name = f"{chr(i + 64)}" # temp
         handicap = random.randint(0,35)  # temp
@@ -174,56 +186,6 @@ def parse_array_argument(array_str):
         # Return None to indicate a parsing error
         return None
 
-def OptimizeDubbles(dubble_arrays,maxPlayedAgainst):
-    missing=0
-    gelukt=True
-    while (len(dubble_arrays) > 0):
-        dag = dubble_arrays.pop(0)
-        flight = dubble_arrays.pop(0)
-        actualSize = dubble_arrays.pop(0)
-        hasSize = dubble_arrays.pop(0)
-        missing = hasSize - actualSize
-        TheFlight = dubble_arrays.pop(0)
-#        print("Dit is wie op dag "+str(dag)+" niet speelt " + str(WieNiet(dag)))
-        condidates = WieNiet(dag)
-        for person in condidates:
-            for FlightPlayer in TheFlight:
-                for player in players:
-                    if ((player.name == FlightPlayer) & (missing > 0)):
-                        amount=player.played_against.count(person)
-                        if amount <= maxPlayedAgainst:
-                            for playing in players:
-                                if (playing.name == person):
-                                    playing.flights.append(flight)
-                                    TheFlight.append(person)
-                                    missing=missing-1
-                                    for Persoon in TheFlight:
-                                        for player1 in players:
-                                            if player1.name == Persoon:
-                                                player1.played_against.append(person)                                
-        if (len(TheFlight) != hasSize):
-            gelukt = False
-    return gelukt    
-
-def MinimaalDubbels(Aantal,hoeveeldubbels,Given_Array):
-    LaagsteDubbels=1000
-    while (Aantal > 0):
-        if (len(Given_Array) > 0):
-            update_players_and_flights_from_schedule(Given_Array)
-        else:
-            ResetPlayers()
-        ZoekOplossing()
-        if dubbels < LaagsteDubbels:
-            LaagsteDubbels=dubbels
-        if dubbels == hoeveeldubbels:
-            Aantal=0
-        else:
-            Aantal=Aantal-1
-        if dubbels == hoeveeldubbels :
-            return ((organize_flights(players,LaagsteDubbels,Aantal)))
-        if Aantal == 0 :
-            return ((organize_flights(players,LaagsteDubbels,Aantal)))
-#        print("aantaldubbels = " + str(dubbels))
 
 parser = argparse.ArgumentParser(description="Process the given array.")
 parser.add_argument("--GivenArray", type=str, help="Array in string format", default="[]")   
@@ -235,17 +197,26 @@ if Given_Array is None:
 Array = parse_array_argument(args.players_per_flight)   
 if Array is not None:
     players_per_flight = Array
-
 players = []
-geenplekdag = []
-Lowest=100000 # search for the lowest
-dubbels=0
+AantalPogingen=10000
+LaagsteDubbels=1000
 
-lowestDubbels = (MinimaalDubbels(Lowest,0,Given_Array)[0])
-MinimaalDubbels(Lowest,lowestDubbels,Given_Array)
+while (AantalPogingen > 0):
+    if (len(Given_Array) > 0):
+        update_players_and_flights_from_schedule(Given_Array)
+    else:
+        ResetPlayers()
+    ZoekOplossing()
+    if dubbels < LaagsteDubbels:
+        LaagsteDubbels=dubbels
+    if dubbels == 0:
+        AantalPogingen=0
+    else:
+        AantalPogingen=AantalPogingen-1
 
-for maxdubbel in range(total_golfers()):   
-    if OptimizeDubbles(geenplekdag,maxdubbel):
-        print(organize_flights(players,dubbels,0)) 
-#        print(str(geenplekdag))
-        exit()
+if AantalPogingen == 0 :
+    print(organize_flights(players,LaagsteDubbels))
+# TODO: Maak een iratieve process die optimaal vind met aantal dubbels en deze twee moeten terug , dus aantal dubbles en hoeveel keer gezocht
+#    print(f"Timeout MinDubbels = {LaagsteDubbels}")
+#print(f"Dubbels {LaagsteDubbels}")
+

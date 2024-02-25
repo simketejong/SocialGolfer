@@ -559,15 +559,16 @@ function pythonReturn(data){
     let validJsonString = jsonString.replace(/'/g, '"');    
     both=JSON.parse(validJsonString);
     doubles=both[0];
-    schedule=both[1];
+    schedule=both[2];
     var displayDoubles = document.getElementById('SaveData');
     displayDoubles.innerHTML = '';
-    displayDoubles.append("Golf Tournament Schedule (Aantal dubbels = " +doubles+" )+")
+    displayDoubles.append("Golf Tournament Schedule (Aantal dubbels = " +doubles+" )")
     var scheduleDiv = document.getElementById('schedule');
     scheduleDiv.innerHTML = '';
     document.getElementById("finalFlightsSummary").style.display="none";
      document.getElementById("SaveData").style.display="block";
     document.getElementById("schedule").style.display="block";
+    console.log(schedule)
     displaySchedule(schedule)
     assignDragAndDrop();
 }
@@ -738,7 +739,7 @@ function finalizeFlights() {
         const realName = String.fromCharCode(65 + i); // Get golfer's name
         const hcp = Math.floor(Math.random() * 36);
 //        const color = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-        const color = `#${(13211215 + i*50).toString(16)}`;
+        const color = `#${(12311215 + i*50).toString(16)}`;
 //        const color = "#"+"7393B3"
         // Generate or assign other attributes as needed
 

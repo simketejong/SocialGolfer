@@ -12,7 +12,7 @@ def application(environ, start_response):
     file1.write(data[2:-1])
     file1.close()    
     data_str = str(data[2:-1])
-    command = ['python', '/var/www/scripts/sort_try.py', f'--players_per_flight={data_str}']
+    command = ['python', '/var/www/scripts/sort.py', f'--players_per_flight={data_str}']
     result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     file1 = open('/tmp/array_receive.txt', 'w')
     file1.write(result.stdout)
@@ -24,3 +24,7 @@ def application(environ, start_response):
     start_response(status, response_headers)   
     terug=result.stdout.encode()
     return [terug]
+
+    #data_json = json.dumps(data)  # Convert the array to a JSON string
+    #start_response('200 OK', [('Content-Type', 'application/json')])
+    #return [data_json.encode()]  # Return the JSON string as a byte object
