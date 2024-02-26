@@ -3,10 +3,10 @@ import argparse
 import ast
 
 players_per_flight = [
-    # Day 1
-    [4, 4, 3],
-    # Day 2
-    [4, 4, 3]
+[2,2],
+[2,2],
+[2,2],
+[2,2]
 ]
 class Golfer:
     def __init__(self, number, name, handicap, pro=False, buggy=False, criteria1=False, criteria2=False, criteria3=False, criteria4=False):
@@ -57,11 +57,11 @@ def AlGespeeld(golfer):
 
 def WieNiet(day):
     geenplek=[]
-    global dubbels
+#    global dubbels
     for player in players:
         if len(player.flights) != (day + 1): # Is nog niet ingedeeld vandaag
             geenplek.append(player.name)
-            dubbels=dubbels+1
+#           dubbels=dubbels+1
     return (geenplek)
 
 def FindPlayerToJoin(day,flight_nummer,flight_indeling):
@@ -70,6 +70,7 @@ def FindPlayerToJoin(day,flight_nummer,flight_indeling):
 
     grote=len(flight_indeling)
     random.shuffle(players)
+
     for player in players:
         kan = True
         if len(player.flights) != (day + 1): # Is nog niet ingedeeld vandaag
@@ -84,17 +85,16 @@ def FindPlayerToJoin(day,flight_nummer,flight_indeling):
         else:
             kan = False # Speel al die dag
         if kan:
-            # Muteer Spelers in flight
-            flight_indeling.append(player.name)
-            #player.flights[day]=flight_nummer
-            player.flights.append(flight_nummer)
-            # Muteer gespeeld bij andere in flight
+            flight_indeling.append(player.name)            
+            player.flights.append(flight_nummer)           
             for Persoon in flight_indeling:
                 for player in players:
                     if player.name == Persoon:
                         for muteer in flight_indeling:
                             if player.name != muteer:
-                                player.played_against.append(muteer)
+                                if muteer not in player.played_against:
+                                    player.played_against.append(muteer)
+
             gelukt=True
             return(flight_indeling)
     geenplekdag.append(day)
@@ -119,7 +119,6 @@ def LaatAlleZien():
     for player in players:
         print(f"Number: {player.number}, Name: {player.name}, Handicap: {player.handicap}")
         print("Flights each day:", player.flights)
-        print("Played Against:", player.played_against)
         print("Played Against:", player.played_against)
         print("Pro:", player.pro)
         print("Buggy:", player.buggy)
@@ -213,6 +212,7 @@ def MinimaalDubbels(Aantal,hoeveeldubbels,Given_Array):
         else:
             ResetPlayers()
         ZoekOplossing()
+        dubbels = len(geenplekdag)/5;
         if dubbels < LaagsteDubbels:
             LaagsteDubbels=dubbels
         if dubbels == hoeveeldubbels:
@@ -220,6 +220,9 @@ def MinimaalDubbels(Aantal,hoeveeldubbels,Given_Array):
         else:
             Aantal=Aantal-1
         if dubbels == hoeveeldubbels :
+#            print(organize_flights(players,dubbels,1000))
+ #           print(geenplekdag)
+  #          LaatAlleZien()
             return ((organize_flights(players,LaagsteDubbels,Aantal)))
         if Aantal == 0 :
             return ((organize_flights(players,LaagsteDubbels,Aantal)))
@@ -233,19 +236,23 @@ Given_Array = parse_array_argument(args.GivenArray)
 if Given_Array is None:
     Given_Array = []
 Array = parse_array_argument(args.players_per_flight)   
-if Array is not None:
+#if Array is not None:
+if len(Array) > 0:
     players_per_flight = Array
 
 players = []
 geenplekdag = []
-Lowest=100000 # search for the lowest
+Lowest=1000 # search for the lowest
 dubbels=0
 
 lowestDubbels = (MinimaalDubbels(Lowest,0,Given_Array)[0])
 MinimaalDubbels(Lowest,lowestDubbels,Given_Array)
 
+#print(organize_flights(players,dubbels,1000))
 for maxdubbel in range(total_golfers()):   
     if OptimizeDubbles(geenplekdag,maxdubbel):
         print(organize_flights(players,dubbels,0)) 
 #        print(str(geenplekdag))
         exit()
+    else:
+        print(organize_flights(players,dubbels,1000))
