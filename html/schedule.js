@@ -73,13 +73,52 @@ function displaySchedule(schedule) {
     const scheduleDiv = document.getElementById('schedule');
     const golferColors = generateGolferColors(); // Assuming this function generates colors for each golfer
 
+//    schedule.forEach((day, index) => {
+//        const dayDiv = document.createElement('div');
+//        dayDiv.innerHTML = `<h2 class="day">Day ${index + 1}</h2>`; // Fix class assignment syntax
     schedule.forEach((day, index) => {
         const dayDiv = document.createElement('div');
-        dayDiv.innerHTML = `<h2 class="day">Day ${index + 1}</h2>`; // Fix class assignment syntax
-        day.forEach((flight, fIndex) => {
-            const flightDiv = document.createElement('div');
-            flightDiv.className = 'flight';
-            flightDiv.innerHTML = `<h3>Flight ${fIndex + 1}</h3>`;
+        const dayH2 = document.createElement('h2');
+        dayH2.className = "day";
+        dayH2.textContent = `Day ${index + 1}`;
+        dayH2.addEventListener('click', function() {
+            document.querySelectorAll(`.checkbox[data-day="${index}"]`).forEach(checkbox => {
+                // Toggle checkbox checked state
+                checkbox.checked = !checkbox.checked;
+                // Extract golfer, day, and flight from checkbox data attributes
+                const golfer = checkbox.getAttribute('data-golfer');
+                const dag = parseInt(checkbox.getAttribute('data-day'), 10);
+                const flight = parseInt(checkbox.getAttribute('data-flight'), 10);
+                // Update the Golfer object
+                update_value(checkbox, golfer, dag, flight);
+            });
+        });
+        dayDiv.appendChild(dayH2);
+
+//        day.forEach((flight, fIndex) => {
+//            const flightDiv = document.createElement('div');
+//            flightDiv.className = 'flight';
+//            flightDiv.innerHTML = `<h3>Flight ${fIndex + 1}</h3>`;
+    day.forEach((flight, fIndex) => {
+        const flightDiv = document.createElement('div');
+        flightDiv.className = 'flight';
+        const flightH3 = document.createElement('h3');
+        flightH3.textContent = `Flight ${fIndex + 1}`;
+        flightH3.addEventListener('click', function(event) {
+            event.stopPropagation(); // Prevent triggering the day click event
+            document.querySelectorAll(`.checkbox[data-day="${index}"][data-flight="${fIndex}"]`).forEach(checkbox => {
+                // Toggle checkbox checked state
+                checkbox.checked = !checkbox.checked;
+                // Extract golfer, day, and flight from checkbox data attributes
+                const golfer = checkbox.getAttribute('data-golfer');
+                const dag = parseInt(checkbox.getAttribute('data-day'), 10);
+                const flight = parseInt(checkbox.getAttribute('data-flight'), 10);
+                // Update the Golfer object
+                update_value(checkbox, golfer, dag, flight);
+            });
+        });
+    flightDiv.appendChild(flightH3);
+
             let hcpSum = 0;
             let hcpMax = -Infinity;
             let hcpMin = Infinity;
@@ -102,16 +141,17 @@ function displaySchedule(schedule) {
                     golferDiv.innerHTML =`
                     <span class="span" onclick="displayGolferInfoPopup('${golfer}')">${displayName}</span>
                     <div class="hcp-display">${golferDiv.getAttribute('hcp')}</div> 
-                    <input type="checkbox" onchange="update_value(this,'${golfer}',${index},${fIndex})," class="checkbox" checked >
+                    <input type="checkbox" data-day="${index}" data-flight="${fIndex}" data-golfer="${golfer}" onchange="update_value(this, '${golfer}', ${index}, ${fIndex})" class="checkbox" checked >
                 `;
                 }
                 else{
                 golferDiv.innerHTML = `
                     <span class="span" onclick="displayGolferInfoPopup('${golfer}')">${displayName}</span>
                     <div class="hcp-display">${golferDiv.getAttribute('hcp')}</div> 
-                    <input type="checkbox" onchange="update_value(this,'${golfer}',${index},${fIndex})" class="checkbox">
+                    <input type="checkbox" data-day="${index}" data-flight="${fIndex}" data-golfer="${golfer}" onchange="update_value(this, '${golfer}', ${index}, ${fIndex})" class="checkbox">
                 `;
                 }
+
 
                 golferDiv.setAttribute('draggable', true);
                 
@@ -149,15 +189,12 @@ function displaySchedule(schedule) {
         });
         scheduleDiv.appendChild(dayDiv);
     });        
-//    console.log(JSON.stringify(Golfers))
 }
-function update_value(chk_bx, golfer, dag, flight){
-    if(chk_bx.checked)
-    {
+function update_value(chk_bx, golfer, dag, flight) {
+    if (chk_bx.checked) {
         Golfers[golfer].taged[dag] = flight;
-    }
-    else{
-        Golfers[golfer].taged[dag] = flight;
+    } else {
+        delete Golfers[golfer].taged[dag]; // Or some other logic to handle the unchecked state
     }
 }
 function assignDragAndDrop() {
