@@ -3,10 +3,10 @@ import argparse
 import ast
 
 players_per_flight = [
-[2,2],
-[2,2],
-[2,2],
-[2,2]
+[3,3],
+[3,3],
+[3,3],
+[3,3]
 ]
 class Golfer:
     def __init__(self, number, name, handicap, pro=False, buggy=False, criteria1=False, criteria2=False, criteria3=False, criteria4=False):
@@ -55,6 +55,7 @@ def AlGespeeld(golfer):
     else:
         return False
 
+
 def WieNiet(day):
     geenplek=[]
 #    global dubbels
@@ -102,7 +103,33 @@ def FindPlayerToJoin(day,flight_nummer,flight_indeling):
     geenplekdag.append(grote)        
     geenplekdag.append(players_per_flight[day][flight_nummer])    
     geenplekdag.append(flight_indeling)
-#    geenplekdag.append(WieNiet(day))
+    return (ZoekBesteDubbels(day,flight_nummer,flight_indeling))
+
+def ZoekBesteDubbels(day,flight_nummer,flight_indeling):
+    BesteCandidate = ""
+    SmallestAmount=100
+    condidates = WieNiet(day)
+    random.shuffle(condidates)
+    for person in condidates:
+        for FlightPlayer in flight_indeling:
+            for player in players:
+                if (player.name == FlightPlayer):
+                    amount=player.played_against.count(person)
+                    if amount <= SmallestAmount:
+                        BesteCandidate = person
+                        SmallestAmount = amount           
+    for playing in players:
+        if (playing.name == BesteCandidate):
+            playing.flights.append(flight_nummer)
+            flight_indeling.append(BesteCandidate)                          
+            for Persoon in flight_indeling:
+                for player1 in players:
+                    if player1.name == Persoon:
+                       player1.played_against.append(person)    
+    return flight_indeling                            
+
+#    flight_indeling.append(str(day) + " " + str(flight_nummer))    
+#    player.flights.append(flight_nummer) # No person
 
 def ZoekOplossing():
     for day, flights in enumerate(players_per_flight):
@@ -221,8 +248,8 @@ def MinimaalDubbels(Aantal,hoeveeldubbels,Given_Array):
             Aantal=Aantal-1
         if dubbels == hoeveeldubbels :
 #            print(organize_flights(players,dubbels,1000))
- #           print(geenplekdag)
-  #          LaatAlleZien()
+#            print(geenplekdag)
+#            LaatAlleZien()
             return ((organize_flights(players,LaagsteDubbels,Aantal)))
         if Aantal == 0 :
             return ((organize_flights(players,LaagsteDubbels,Aantal)))
@@ -247,12 +274,9 @@ dubbels=0
 
 lowestDubbels = (MinimaalDubbels(Lowest,0,Given_Array)[0])
 MinimaalDubbels(Lowest,lowestDubbels,Given_Array)
+print(organize_flights(players,lowestDubbels,0))
 
-#print(organize_flights(players,dubbels,1000))
-for maxdubbel in range(total_golfers()):   
-    if OptimizeDubbles(geenplekdag,maxdubbel):
-        print(organize_flights(players,dubbels,0)) 
-#        print(str(geenplekdag))
-        exit()
-    else:
-        print(organize_flights(players,dubbels,1000))
+#for maxdubbel in range(total_golfers()):   
+#    if OptimizeDubbles(geenplekdag,maxdubbel):
+#        print(organize_flights(players,dubbels,0)) 
+#        exit()
