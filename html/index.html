@@ -183,6 +183,10 @@
     
     <div id="scheduleDisplay"></div>
 
+    <input type="file" id="fileInput" style="display: none;" onchange="loadFile(event)">
+    <button id="Laad" onclick="document.getElementById('fileInput').click();">Laad Bestand</button>
+    <button id="Save" onclick="saveFile()">Opslaan als Bestand</button>
+
 
     <script src="schedule.js"></script>
 </body>

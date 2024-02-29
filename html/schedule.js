@@ -319,7 +319,7 @@ function openPopup(golferDiv) {
                 Golfers[golfers].color = colorPicker.value;
                 nameSpan.textContent = naam.value;
                 Golfers[golfers].realName = naam.value;
-                alert(naam.value)
+                //alert(naam.value)
                 golferDiv.classList.toggle('buggy', buggyCheckbox.checked);
                 Golfers[golfers].buggy = buggyCheckbox.checked;
                 golferDiv.classList.toggle('pro', proCheckbox.checked);
@@ -798,7 +798,48 @@ function finalizeFlights() {
     }
     return updatedFlightsPerDay
 }
-
+function loadFile(event) {
+    const input = event.target;
+    if ('files' in input && input.files.length > 0) {
+        let file = input.files[0];
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                let json = JSON.parse(e.target.result);
+                alert("Bestand succesvol geladen!");
+                // Verwerk de geladen JSON-gegevens
+                console.log(json);
+                Golfers=json.Golfers
+                schedule=json.schedule
+                var scheduleDiv = document.getElementById('schedule');
+                scheduleDiv.innerHTML = '';
+                document.getElementById("finalFlightsSummary").style.display="none";
+                document.getElementById("SaveData").style.display="block";
+                document.getElementById("schedule").style.display="block";
+                console.log(schedule)
+                displaySchedule(schedule)
+                assignDragAndDrop()
+            } catch (error) {
+                alert("Er is een fout opgetreden bij het lezen van het bestand.");
+            }
+        }
+        reader.readAsText(file);
+    }
+}
+function saveFile() {
+    const filename = prompt("Voer de naam in voor het op te slaan bestand:", "golfers_data.json");
+    if (filename) {
+        const data = JSON.stringify({Golfers, schedule}, null, 4);
+        const blob = new Blob([data], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('href', url);
+        a.setAttribute('download', filename);
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+}
 /*function rebuildDOMWithFinalizedFlights(updatedFlightsPerDay) {
     const flightsSummaryDiv = document.getElementById('finalFlightsSummary');
     flightsSummaryDiv.innerHTML = ''; // Clear existing summary
