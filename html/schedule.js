@@ -73,9 +73,6 @@ function displaySchedule(schedule) {
     const scheduleDiv = document.getElementById('schedule');
     const golferColors = generateGolferColors(); // Assuming this function generates colors for each golfer
 
-//    schedule.forEach((day, index) => {
-//        const dayDiv = document.createElement('div');
-//        dayDiv.innerHTML = `<h2 class="day">Day ${index + 1}</h2>`; // Fix class assignment syntax
     schedule.forEach((day, index) => {
         const dayDiv = document.createElement('div');
         const dayH2 = document.createElement('h2');
@@ -95,10 +92,6 @@ function displaySchedule(schedule) {
         });
         dayDiv.appendChild(dayH2);
 
-//        day.forEach((flight, fIndex) => {
-//            const flightDiv = document.createElement('div');
-//            flightDiv.className = 'flight';
-//            flightDiv.innerHTML = `<h3>Flight ${fIndex + 1}</h3>`;
     day.forEach((flight, fIndex) => {
         const flightDiv = document.createElement('div');
         flightDiv.className = 'flight';
@@ -127,8 +120,6 @@ function displaySchedule(schedule) {
                 const golferDiv = document.createElement('div');
                 golferDiv.className = 'golfer';
                 golferDiv.setAttribute('golfer', golfer);
-                // Assuming hcp is set here as an example. You should adjust this according to your actual data.
-                //golferDiv.setAttribute('hcp', Math.floor(Math.random() * 36)); // Example hcp setting
                 if (Golfers[golfer]) {
                     golferDiv.setAttribute('hcp', Golfers[golfer].hcp);
                     golferDiv.style.backgroundColor = Golfers[golfer].color;
@@ -182,7 +173,7 @@ function displaySchedule(schedule) {
             // Append HCP summary to flightDiv
             const hcpSummaryDiv = document.createElement('div');
             hcpSummaryDiv.className = `hcp-summary`
-            hcpSummaryDiv.innerHTML = `Total HCP: ${hcpSum}' Highest HCP: ${hcpMax}, Lowest HCP: ${hcpMin}`;
+            hcpSummaryDiv.innerHTML = `Total HCP: ${hcpSum} <br><br> Highest HCP: ${hcpMax} <br><br> Lowest HCP: ${hcpMin}`;
             flightDiv.appendChild(hcpSummaryDiv);
 
             dayDiv.appendChild(flightDiv);
@@ -763,22 +754,18 @@ function finalizeFlights() {
         return;
     }
 
-    // Rebuild the DOM based on the updated flights structure
     console.log(updatedFlightsPerDay)
 //    rebuildDOMWithFinalizedFlights(updatedFlightsPerDay);
     document.getElementById("golfer-setup").style.display="none";
     document.getElementById("golfer-details").style.display="none";
     document.getElementById("finalFlightsSummary").style.display="block";
 
-//  populateGolfers
     for (let i = 0; i < numGolfers; i++) {
         const name = String.fromCharCode(65 + i); // Get golfer's name
         const realName = String.fromCharCode(65 + i); // Get golfer's name
         const hcp = Math.floor(Math.random() * 36);
 //        const color = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
         const color = `#${(12311215 + i*50).toString(16)}`;
-//        const color = "#"+"7393B3"
-        // Generate or assign other attributes as needed
 
         Golfers[name] = {
             realName: realName,
@@ -806,13 +793,14 @@ function loadFile(event) {
         reader.onload = function(e) {
             try {
                 let json = JSON.parse(e.target.result);
-                alert("Bestand succesvol geladen!");
-                // Verwerk de geladen JSON-gegevens
+//                alert("Bestand succesvol geladen!");
                 console.log(json);
                 Golfers=json.Golfers
                 schedule=json.schedule
                 var scheduleDiv = document.getElementById('schedule');
                 scheduleDiv.innerHTML = '';
+                document.getElementById("golfer-setup").style.display="none";
+                document.getElementById("golfer-details").style.display="none";
                 document.getElementById("finalFlightsSummary").style.display="none";
                 document.getElementById("SaveData").style.display="block";
                 document.getElementById("schedule").style.display="block";
