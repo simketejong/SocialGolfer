@@ -68,6 +68,7 @@ def WieNiet(day):
 def FindPlayerToJoin(day,flight_nummer,flight_indeling):
     kan = True
     gelukt = False
+    '''
     if len(Given_Array) > 0:
         given_flight=Given_Array[day][flight_nummer]
         plaats_flight_indeling=len(flight_indeling)
@@ -78,10 +79,8 @@ def FindPlayerToJoin(day,flight_nummer,flight_indeling):
                     flight_indeling.append(player.name)            
                     player.flights.append(flight_nummer)
                     return (flight_indeling)
-
-    grote=len(flight_indeling)
+    '''
     random.shuffle(players)
-
     for player in players:
         kan = True
         if len(player.flights) != (day + 1): # Is nog niet ingedeeld vandaag
