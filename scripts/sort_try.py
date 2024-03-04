@@ -21,6 +21,7 @@ class Golfer:
         self.criteria2 = criteria2
         self.criteria3 = criteria3
         self.criteria4 = criteria4
+        self.given = []
 
 def total_golfers():
     if players_per_flight:
@@ -67,6 +68,16 @@ def WieNiet(day):
 def FindPlayerToJoin(day,flight_nummer,flight_indeling):
     kan = True
     gelukt = False
+    if len(Given_Array) > 0:
+        given_flight=Given_Array[day][flight_nummer]
+        plaats_flight_indeling=len(flight_indeling)
+        if given_flight[plaats_flight_indeling+1] != "?":
+            naam = given_flight[plaats_flight_indeling+1]
+            for player in players:
+                if player.name == naam:
+                    flight_indeling.append(player.name)            
+                    player.flights.append(flight_nummer)
+                    return (flight_indeling)
 
     grote=len(flight_indeling)
     random.shuffle(players)
@@ -177,7 +188,9 @@ def update_players_and_flights_from_schedule(Given_Array):
                 player = next((p for p in players if p.name == player_name), None)
                 if player:
                     #player.flights[day] = flight_num
-                    player.flights.append(flight_num)
+##                    player.flights.append(flight_num)
+                    position=flight.index(player.name)
+                    player.given.append([day,flight_num,position])
                     # Update played_against voor elke speler in dezelfde flight
                     for other_player_number in flight:
                         if other_player_number != player_name:
