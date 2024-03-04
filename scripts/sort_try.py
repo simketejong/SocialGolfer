@@ -55,7 +55,6 @@ def AlGespeeld(golfer):
     else:
         return False
 
-
 def WieNiet(day):
     geenplek=[]
 #    global dubbels
@@ -185,11 +184,11 @@ def update_players_and_flights_from_schedule(Given_Array):
                             if other_player_number not in player.played_against:
                                 player.played_against.append(other_player_number)
 #Given_Array=[]
-#Given_Array= [[["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"]],
-#              [["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"]],
-#              [["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"]],
-#              [["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"]],
-#              [["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"]]]
+Given_Array= [[["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?"],["?","?","?"]],
+              [["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?"],["?","?","?"]],
+              [["H","J","W","E"],["V","F","K","A"],["O","R","U","Z"],["G","X","S","T"],["D","C","M","L"],["Q","B","Y"],["P","N","I"]],
+              [["?","?","?","?"],["?","?","?","?"],["?","?","?"],["?","?","?"],["?","?","?"],["?","?","?"],["?","?","?"],["?","?","?"]],
+              [["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?"],["?","?","?"]]]
 
 def parse_array_argument(array_str):
     try:
@@ -259,13 +258,13 @@ parser = argparse.ArgumentParser(description="Process the given array.")
 parser.add_argument("--GivenArray", type=str, help="Array in string format", default="[]")   
 parser.add_argument("--players_per_flight", type=str, help="Array in string format", default="[]")
 args = parser.parse_args()    
-Given_Array = parse_array_argument(args.GivenArray)   
+if Given_Array is None:
+    Given_Array = parse_array_argument(args.GivenArray)   
 if Given_Array is None:
     Given_Array = []
-Array = parse_array_argument(args.players_per_flight)   
-#if Array is not None:
-if len(Array) > 0:
-    players_per_flight = Array
+    Array = parse_array_argument(args.players_per_flight)   
+    if len(Array) > 0:
+        players_per_flight = Array
 
 players = []
 geenplekdag = []

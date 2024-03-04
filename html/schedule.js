@@ -329,7 +329,8 @@ function openPopup(golferDiv) {
             }
         });
 //      Golfers[golfers].realName = "Simke"
-        console.log(JSON.stringify(Golfers[golfers]))
+//        console.log(JSON.stringify(Golfers[golfers]))
+        recalculateHcpForFlights()
         popup.style.display = 'none';
     };
 }
@@ -617,12 +618,12 @@ function recalculateHcpForFlights() {
         // Assuming there's only one summary div per flight, update it
         const hcpSummaryDiv = flightDiv.querySelector('.hcp-summary');
         if(hcpSummaryDiv) {
-            hcpSummaryDiv.innerHTML = `Total HCP: ${hcpSum}, Highest HCP: ${hcpMax}, Lowest HCP: ${hcpMin}`;
+            hcpSummaryDiv.innerHTML = `Total HCP: ${hcpSum} <br><br> Highest HCP: ${hcpMax} <br><br> Lowest HCP: ${hcpMin}`;
         } else {
             // If there's no summary div (first drag-and-drop operation), create and append it
             const newHcpSummaryDiv = document.createElement('div');
             newHcpSummaryDiv.className = 'hcp-summary';
-            newHcpSummaryDiv.innerHTML = `Total HCP: ${hcpSum}, Highest HCP: ${hcpMax}, Lowest HCP: ${hcpMin}`;
+            newHcpSummaryDiv.innerHTML = `Total HCP: ${hcpSum} <br><br> Highest HCP: ${hcpMax} <br><br> Lowest HCP: ${hcpMin}`;
             flightDiv.appendChild(newHcpSummaryDiv);
         }
     });
