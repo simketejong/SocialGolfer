@@ -71,8 +71,8 @@ def FindPlayerToJoin(day,flight_nummer,flight_indeling):
     if len(Given_Array) > 0:
         given_flight=Given_Array[day][flight_nummer]
         plaats_flight_indeling=len(flight_indeling)
-        if given_flight[plaats_flight_indeling+1] != "?":
-            naam = given_flight[plaats_flight_indeling+1]
+        if given_flight[plaats_flight_indeling] != "?":
+            naam = given_flight[plaats_flight_indeling]
             for player in players:
                 if player.name == naam:
                     flight_indeling.append(player.name)            
@@ -196,13 +196,11 @@ def update_players_and_flights_from_schedule(Given_Array):
                         if other_player_number != player_name:
                             if other_player_number not in player.played_against:
                                 player.played_against.append(other_player_number)
-#Given_Array=[]
-Given_Array= [[["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?"],["?","?","?"]],
-              [["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?"],["?","?","?"]],
-              [["H","J","W","E"],["V","F","K","A"],["O","R","U","Z"],["G","X","S","T"],["D","C","M","L"],["Q","B","Y"],["P","N","I"]],
-              [["?","?","?","?"],["?","?","?","?"],["?","?","?"],["?","?","?"],["?","?","?"],["?","?","?"],["?","?","?"],["?","?","?"]],
-              [["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?"],["?","?","?"]]]
-
+Given_Array=[]
+#Given_Array= [[["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?"],["?","?","?"]],
+#              [["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?"],["?","?","?"]],
+#              [["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?"],["?","?","?"]]]
+                                
 def parse_array_argument(array_str):
     try:
         # Safely evaluate the string representation of the list
