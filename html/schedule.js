@@ -496,7 +496,7 @@ function displayPlayMatrix(playMatrix) {
     document.body.appendChild(matrixDiv); // Or append to another element as needed
 }
 function displayGlobalSchedule() {
-    console.log(JSON.stringify(schedule));
+//    console.log(JSON.stringify(schedule));
     const scheduleContainer = document.getElementById('scheduleDisplay');
     scheduleContainer.innerHTML = ''; // Clear previous content
 
@@ -547,8 +547,8 @@ function rebuildScheduleFromDOM() {
             scheduleTest.push(flightsForDay);
         });
         //data=JSON.stringify(schedule)
-        console.log(JSON.stringify(schedule));
-        console.log(JSON.stringify(scheduleTest));   
+//        console.log(JSON.stringify(schedule));
+//        console.log(JSON.stringify(scheduleTest));   
         return scheduleTest;
 }
 function searchSolution() {
@@ -580,7 +580,7 @@ function searchSolution() {
     
             schedule.push(flightsForDay);
         });
-        console.log(JSON.stringify(schedule));       
+//        console.log(JSON.stringify(schedule));       
         return schedule;
 }
 function pythonReturn(data){
@@ -598,6 +598,7 @@ function pythonReturn(data){
      document.getElementById("SaveData").style.display="block";
     document.getElementById("schedule").style.display="block";
     console.log(schedule)
+    console.log(JSON.stringify(Golfers))
     displaySchedule(schedule)
     assignDragAndDrop();
 }
@@ -755,7 +756,7 @@ function finalizeFlights() {
         return;
     }
 
-    console.log(updatedFlightsPerDay)
+//    console.log(updatedFlightsPerDay)
 //    rebuildDOMWithFinalizedFlights(updatedFlightsPerDay);
     document.getElementById("golfer-setup").style.display="none";
     document.getElementById("golfer-details").style.display="none";
@@ -795,7 +796,7 @@ function loadFile(event) {
             try {
                 let json = JSON.parse(e.target.result);
 //                alert("Bestand succesvol geladen!");
-                console.log(json);
+//                console.log(json);
                 Golfers=json.Golfers
                 schedule=json.schedule
                 var scheduleDiv = document.getElementById('schedule');
@@ -805,7 +806,7 @@ function loadFile(event) {
                 document.getElementById("finalFlightsSummary").style.display="none";
                 document.getElementById("SaveData").style.display="block";
                 document.getElementById("schedule").style.display="block";
-                console.log(schedule)
+//                console.log(schedule)
                 displaySchedule(schedule)
                 assignDragAndDrop()
             } catch (error) {

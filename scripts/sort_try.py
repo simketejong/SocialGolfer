@@ -2,12 +2,6 @@ import random
 import argparse
 import ast
 
-players_per_flight = [
-[3,3],
-[3,3],
-[3,3],
-[3,3]
-]
 class Golfer:
     def __init__(self, number, name, handicap, pro=False, buggy=False, criteria1=False, criteria2=False, criteria3=False, criteria4=False):
         self.number = number
@@ -68,7 +62,7 @@ def WieNiet(day):
 def FindPlayerToJoin(day,flight_nummer,flight_indeling):
     kan = True
     gelukt = False
-    '''
+    
     if len(Given_Array) > 0:
         given_flight=Given_Array[day][flight_nummer]
         plaats_flight_indeling=len(flight_indeling)
@@ -79,10 +73,17 @@ def FindPlayerToJoin(day,flight_nummer,flight_indeling):
                     flight_indeling.append(player.name)            
                     player.flights.append(flight_nummer)
                     return (flight_indeling)
-    '''
+    
+    grote=len(flight_indeling)
     random.shuffle(players)
+
     for player in players:
         kan = True
+        ## Zit in Given dus komt een keer goed
+        if len(Given_Array) > 0:
+            for kijkGiven in Given_Array[day]:
+                if player.name in kijkGiven:
+                    kan = False 
         if len(player.flights) != (day + 1): # Is nog niet ingedeeld vandaag
             if player.name not in flight_indeling:
                 for Persoon in flight_indeling:
@@ -137,8 +138,8 @@ def ZoekBesteDubbels(day,flight_nummer,flight_indeling):
                        player1.played_against.append(person)    
     return flight_indeling                            
 
-#    flight_indeling.append(str(day) + " " + str(flight_nummer))    
-#    player.flights.append(flight_nummer) # No person
+    #    flight_indeling.append(str(day) + " " + str(flight_nummer))    
+    #    player.flights.append(flight_nummer) # No person
 
 def ZoekOplossing():
     for day, flights in enumerate(players_per_flight):
@@ -195,10 +196,6 @@ def update_players_and_flights_from_schedule(Given_Array):
                         if other_player_number != player_name:
                             if other_player_number not in player.played_against:
                                 player.played_against.append(other_player_number)
-Given_Array=[]
-#Given_Array= [[["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?"],["?","?","?"]],
-#              [["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?"],["?","?","?"]],
-#              [["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?"],["?","?","?"]]]
                                 
 def parse_array_argument(array_str):
     try:
@@ -262,20 +259,34 @@ def MinimaalDubbels(Aantal,hoeveeldubbels,Given_Array):
             return ((organize_flights(players,LaagsteDubbels,Aantal)))
         if Aantal == 0 :
             return ((organize_flights(players,LaagsteDubbels,Aantal)))
-#        print("aantaldubbels = " + str(dubbels))
+    #        print("aantaldubbels = " + str(dubbels))
+
+players_per_flight = []
+#players_per_flight = [
+#[4,4,4,4,4,3,3],
+#[4,4,4,4,4,3,3],
+#[4,4,4,4,4,3,3],
+#[4,4,4,4,4,3,3],
+#[4,4,4,4,4,3,3]
+#]
+Given_Array=[]
+Given_Array= [[["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?"],["?","?","?"]],
+              [["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?"],["?","?","?"]],
+              [["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?","?"],["?","?","?"],["?","?","?"]]]
 
 parser = argparse.ArgumentParser(description="Process the given array.")
 parser.add_argument("--GivenArray", type=str, help="Array in string format", default="[]")   
 parser.add_argument("--players_per_flight", type=str, help="Array in string format", default="[]")
 args = parser.parse_args()    
+
+Array = parse_array_argument(args.players_per_flight)  
+Given_Array = parse_array_argument(args.GivenArray) 
 if Given_Array is None:
     Given_Array = parse_array_argument(args.GivenArray)   
-if Given_Array is None:
-    Given_Array = []
-    Array = parse_array_argument(args.players_per_flight)   
-    if len(Array) > 0:
-        players_per_flight = Array
-
+if len(Given_Array) == 0:
+    players_per_flight = Array
+else:
+    players_per_flight = []
 players = []
 geenplekdag = []
 Lowest=1000 # search for the lowest
