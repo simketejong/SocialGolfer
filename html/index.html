@@ -103,15 +103,40 @@
             background-color: rgb(200, 103, 44);
             right: 22px;
         }
+        .refreshButton {
+                left: 13%;
+                top: 11%;
+                cursor: pointer;
+                position: absolute;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                box-shadow: 0 0 1.105vw 0.205vw rgb(35, 47, 62);
+                background-color: #7aa180;
+                width: 16vw;
+                height: 2vw;
+                border-left: 0.4vw solid #b60ee5;
+                border-radius: 0.315vw;
+                font-weight: bolder;
+                font-size: 1.1vw;
+                line-height: 2vw;
+                text-align: center;
+                transition: 0.7s ease-in-out transform, 0.7s ease-in-out;
+            }
+
+            .refreshButton:hover {
+                color: red;
+                transition: 0.7s ease-in-out transform, 0.7s ease-in-out;
+            }
 
     </style>
     <script type="text/javascript" src="j3.7.1.js"></script>
     <script type="text/javascript">
     $(document).ready(function(){        
-        $('#SaveData').click(function(){
+        $('#RefreshData').click(function(){
         $.ajax({
             type: "POST",
-            url: "http://testserver/test_wsgi",
+            url: "http://192.168.1.20/test_wsgi",
             data: JSON.stringify(searchSolution()),
             contentType: "application/json", // Ensure you set the content type when sending JSON
             dataType: "text", // Expecting text response from server
@@ -127,7 +152,7 @@
         $('#finalFlightsSummary').click(function(){
         $.ajax({
             type: "POST",
-            url: "http://testserver/test_array",
+            url: "http://192.168.1.20/test_array",
             data: JSON.stringify(finalizeFlights()),
             contentType: "application/json", // Ensure you set the content type when sending JSON
             dataType: "text", // Expecting text response from server
@@ -159,7 +184,8 @@
         <!-- Golfer details will be dynamically added here -->
     </div>
     <button id="finalFlightsSummary" style="display:none" >Generated Flights/Sizes</button>
-    <h1 id="SaveData" style="display:none">Golf Tournament Schedule</h1>
+    <h1 id="SaveData" style="display:none" >Golf Tournament Schedule</h1>
+    <h1 id="RefreshData" style="display:none" class="refreshButton" >Reconstruct</h1>
     <div id="schedule" style="display:none" ></div>
     <div id="popup" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background-color:white; padding:20px; border-radius:10px; box-shadow:0 0 15px rgba(0,0,0,.2); z-index:1000;">
         <h3>Adjust Golfer</h3>

@@ -74,6 +74,7 @@ function displaySchedule(schedule) {
     const golferColors = generateGolferColors(); // Assuming this function generates colors for each golfer
 
     schedule.forEach((day, index) => {
+       
         const dayDiv = document.createElement('div');
         const dayH2 = document.createElement('h2');
         dayH2.className = "day";
@@ -90,7 +91,36 @@ function displaySchedule(schedule) {
                 update_value(checkbox, golfer, dag, flight);
             });
         });
+
+        const allButton = document.createElement('button');
+        allButton.textContent = 'All';
+        allButton.addEventListener('click', function() {
+            document.querySelectorAll(`.checkbox[data-day="${index}"]`).forEach(checkbox => {
+                checkbox.checked = false;
+                const golfer = checkbox.getAttribute('data-golfer');
+                const dag = parseInt(checkbox.getAttribute('data-day'), 10);
+                const flight = parseInt(checkbox.getAttribute('data-flight'), 10);
+                // Update the Golfer object
+                update_value(checkbox, golfer, dag, flight);
+            });
+        });
+        const noneButton = document.createElement('button');
+        noneButton.textContent = 'None';
+        noneButton.addEventListener('click', function() {
+            document.querySelectorAll(`.checkbox[data-day="${index}"]`).forEach(checkbox => {
+                // Toggle checkbox checked state
+                checkbox.checked = true;
+                // Extract golfer, day, and flight from checkbox data attributes
+                const golfer = checkbox.getAttribute('data-golfer');
+                const dag = parseInt(checkbox.getAttribute('data-day'), 10);
+                const flight = parseInt(checkbox.getAttribute('data-flight'), 10);
+                // Update the Golfer object
+                update_value(checkbox, golfer, dag, flight);
+            });
+        });
         dayDiv.appendChild(dayH2);
+        dayH2.appendChild(allButton);
+        dayH2.appendChild(noneButton);
 
     day.forEach((flight, fIndex) => {
         const flightDiv = document.createElement('div');
@@ -110,7 +140,42 @@ function displaySchedule(schedule) {
                 update_value(checkbox, golfer, dag, flight);
             });
         });
+
+        const allButton = document.createElement('button');
+        allButton.textContent = 'All';
+        allButton.addEventListener('click', function(event) {
+            event.stopPropagation(); // Prevent triggering the day click event
+            document.querySelectorAll(`.checkbox[data-day="${index}"][data-flight="${fIndex}"]`).forEach(checkbox => {
+                // Toggle checkbox checked state
+                checkbox.checked = true;
+                // Extract golfer, day, and flight from checkbox data attributes
+                const golfer = checkbox.getAttribute('data-golfer');
+                const dag = parseInt(checkbox.getAttribute('data-day'), 10);
+                const flight = parseInt(checkbox.getAttribute('data-flight'), 10);
+                // Update the Golfer object
+                update_value(checkbox, golfer, dag, flight);
+            });
+        });
+        const noneButton = document.createElement('button');
+        noneButton.textContent = 'None';
+        noneButton.addEventListener('click', function(event) {
+            event.stopPropagation(); // Prevent triggering the day click event
+            document.querySelectorAll(`.checkbox[data-day="${index}"][data-flight="${fIndex}"]`).forEach(checkbox => {
+                // Toggle checkbox checked state
+                checkbox.checked = false;
+                // Extract golfer, day, and flight from checkbox data attributes
+                const golfer = checkbox.getAttribute('data-golfer');
+                const dag = parseInt(checkbox.getAttribute('data-day'), 10);
+                const flight = parseInt(checkbox.getAttribute('data-flight'), 10);
+                // Update the Golfer object
+                update_value(checkbox, golfer, dag, flight);
+            });
+        });
+
     flightDiv.appendChild(flightH3);
+    flightDiv.appendChild(allButton);
+    flightDiv.appendChild(noneButton);
+
 
             let hcpSum = 0;
             let hcpMax = -Infinity;
@@ -180,6 +245,9 @@ function displaySchedule(schedule) {
         });
         scheduleDiv.appendChild(dayDiv);
     });        
+}
+function tagAllForDay(index){
+
 }
 function update_value(chk_bx, golfer, dag, flight) {
     if (chk_bx.checked) {
@@ -597,8 +665,9 @@ function pythonReturn(data){
     document.getElementById("finalFlightsSummary").style.display="none";
      document.getElementById("SaveData").style.display="block";
     document.getElementById("schedule").style.display="block";
-    console.log(schedule)
-    console.log(JSON.stringify(Golfers))
+    document.getElementById("RefreshData").style.display="block";
+//    console.log(schedule)
+//    console.log(JSON.stringify(Golfers))
     displaySchedule(schedule)
     assignDragAndDrop();
 }
